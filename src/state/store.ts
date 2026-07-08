@@ -130,11 +130,13 @@ interface GameStore {
   boneCast: { freeCastsRemaining: number; castsSincePity: number; lastResult: BoneCastResult | null };
   lastCampaign: LastCampaign | null;
   pendingOffline: OfflineClaim | null;
+  tutorialDone: boolean;
 
   // lifecycle
   hydrateDaily: () => void;
   computeOffline: () => void;
   markSeen: () => void;
+  completeTutorial: () => void;
 
   // economy
   setResonance: (n: number) => void; // bank the current run pool
@@ -221,6 +223,9 @@ export const useStore = create<GameStore>()(
       boneCast: { freeCastsRemaining: 1, castsSincePity: 0, lastResult: null },
       lastCampaign: null,
       pendingOffline: null,
+      tutorialDone: false,
+
+      completeTutorial: () => set({ tutorialDone: true }),
 
       hydrateDaily: () => {
         const today = dayNumber();
@@ -444,6 +449,7 @@ export const useStore = create<GameStore>()(
           boneCast: { freeCastsRemaining: 1, castsSincePity: 0, lastResult: null },
           lastCampaign: null,
           pendingOffline: null,
+          tutorialDone: false,
         }),
 
       claimOffline: () => {
@@ -472,6 +478,7 @@ export const useStore = create<GameStore>()(
         rituals: s.rituals,
         boneCast: s.boneCast,
         lastCampaign: s.lastCampaign,
+        tutorialDone: s.tutorialDone,
       }),
       // Any persisted blob (incl. tampered ones) is clamped back to sanity on load.
       onRehydrateStorage: () => (state) => {

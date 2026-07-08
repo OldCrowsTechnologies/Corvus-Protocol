@@ -9,6 +9,7 @@ import { FeatherPill } from '@/components/CurrencyPill';
 import { ResonanceIcon } from '@/components/icons';
 import { Screen } from '@/components/Screen';
 import { T } from '@/components/T';
+import { TutorialOverlay, type CoachStep } from '@/components/TutorialOverlay';
 import { ProgressBar } from '@/components/ui';
 import { AFFIXES, MAX_WAVES, ROLLABLE_AFFIXES, TOWERS } from '@/game/constants';
 import {
@@ -36,6 +37,31 @@ const AFFIX_ICON: Record<string, BuffIconName> = {
   veil: 'shield',
 };
 
+const TUTORIAL_STEPS: CoachStep[] = [
+  {
+    title: 'Raise your first tower',
+    body: 'Tap a tower in the palette below to arm it — CHAOS (Corvus) is a reliable opener.',
+    anchor: 'palette',
+    awaitAction: true,
+  },
+  {
+    title: 'Place it on the board',
+    body: 'Tap a glowing dark tile near the path. Your tower auto-attacks the Pale Chorus that wander into range.',
+    anchor: 'board',
+    awaitAction: true,
+  },
+  {
+    title: 'Resonance fuels the ritual',
+    body: 'This counter is Resonance — earned from kills and idle income. Spend it on more towers and rituals as the waves grow.',
+    anchor: 'top',
+  },
+  {
+    title: 'Defend the circle',
+    body: 'Each enemy that reaches the altar costs Circle Integrity. Hit zero and the run ends. Survive 15 waves to face Whisper.',
+    anchor: 'center',
+  },
+];
+
 export function CampaignScreen({ navigation, route }: Props) {
   const difficulty = route.params?.difficulty ?? 'normal';
   const resume = route.params?.resume ?? false;
@@ -43,6 +69,11 @@ export function CampaignScreen({ navigation, route }: Props) {
   const store = useStore;
   const account = useStore((s) => s.account);
   const ritualCount = useStore((s) => s.account.consumables.ritual);
+  const tutorialDone = useStore((s) => s.tutorialDone);
+  const completeTutorial = useStore((s) => s.completeTutorial);
+
+  // -1 = tutorial off; 0..n = current coach step. Only on a fresh (non-resume) first run.
+  const [tutStep, setTutStep] = useState(() => (tutorialDone || (route.params?.resume ?? false) ? -1 : 0));
 
   const campRef = useRef<CampaignState | null>(null);
   const xpBuffer = useRef<Partial<Record<TowerType, number>>>({});
@@ -200,12 +231,32 @@ export function CampaignScreen({ navigation, route }: Props) {
 
   const st = campRef.current!;
 
+  // tutorial: step 0 (arm) advances when a tower is armed
+  useEffect(() => {
+    if (tutStep === 0 && armed) setTutStep(1);
+  }, [armed, tutStep]);
+
+  const advanceTutorial = () => {
+    setTutStep((s) => {
+      if (s >= TUTORIAL_STEPS.length - 1) {
+        completeTutorial();
+        return -1;
+      }
+      return s + 1;
+    });
+  };
+  const skipTutorial = () => {
+    completeTutorial();
+    setTutStep(-1);
+  };
+
   const tapBoard = (nx: number, ny: number) => {
     if (!armed) return;
     const ok = placeTower(st, armed, nx, ny);
     if (ok) {
       store.getState().recordTowerPlaced();
       if (Platform.OS !== 'web') Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+      if (tutStep === 1) setTutStep(2); // step 1 (place) advances on a successful placement
       forceRender((n) => n + 1);
     } else {
       Alert.alert('Cannot place', canPlaceTower(st, armed) ? 'Tap an empty dark (buildable) tile.' : 'Not enough Resonance or tower cap reached.');
@@ -354,6 +405,16 @@ export function CampaignScreen({ navigation, route }: Props) {
             tap to resume
           </T>
         </Pressable>
+      ) : null}
+
+      {tutStep >= 0 && tutStep < TUTORIAL_STEPS.length ? (
+        <TutorialOverlay
+          step={TUTORIAL_STEPS[tutStep]}
+          index={tutStep}
+          total={TUTORIAL_STEPS.length}
+          onNext={advanceTutorial}
+          onSkip={skipTutorial}
+        />
       ) : null}
     </Screen>
   );
