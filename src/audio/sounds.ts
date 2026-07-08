@@ -8,13 +8,25 @@
  */
 import { useStore } from '@/state/store';
 
-type ExpoAudio = typeof import('expo-audio');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ExpoAudio = any;
 let AudioMod: ExpoAudio | null = null;
-try {
-  // Lazy, guarded — if the native module isn't present we degrade to silence.
-  AudioMod = require('expo-audio');
-} catch {
-  AudioMod = null;
+let audioTried = false;
+
+/**
+ * Lazily load expo-audio on FIRST sound (a user interaction), never at app start.
+ * This guarantees the native audio module can't affect boot, even on a device where
+ * it might fail to initialize.
+ */
+function getAudio(): ExpoAudio | null {
+  if (audioTried) return AudioMod;
+  audioTried = true;
+  try {
+    AudioMod = require('expo-audio');
+  } catch {
+    AudioMod = null;
+  }
+  return AudioMod;
 }
 
 const SFX = {
@@ -53,11 +65,13 @@ function voiceOn(): boolean {
 
 /** Fire a one-shot SFX. No-op if disabled, unsupported, or anything throws. */
 export function playSfx(name: SfxName): void {
-  if (!AudioMod || !sfxOn()) return;
+  if (!sfxOn()) return;
+  const audio = getAudio();
+  if (!audio) return;
   try {
     let p = players[name];
     if (!p) {
-      p = AudioMod.createAudioPlayer(SFX[name]);
+      p = audio.createAudioPlayer(SFX[name]);
       players[name] = p;
     }
     p.seekTo(0);
@@ -123,14 +137,16 @@ const voicePlayers: Record<string, any> = {};
 
 /** Play a character voice line if its audio is bundled + voice is enabled. No-op otherwise. */
 export function playVoice(character: VoiceChar, event: VoiceEvent): void {
-  if (!AudioMod || !voiceOn()) return;
+  if (!voiceOn()) return;
   const key = `${character}_${event}`;
   const src = VOICE_FILES[key];
   if (!src) return; // no audio yet — silently skip
+  const audio = getAudio();
+  if (!audio) return;
   try {
     let p = voicePlayers[key];
     if (!p) {
-      p = AudioMod.createAudioPlayer(src);
+      p = audio.createAudioPlayer(src);
       voicePlayers[key] = p;
     }
     p.seekTo(0);

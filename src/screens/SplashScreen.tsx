@@ -22,12 +22,11 @@ export function SplashScreen({ navigation }: Props) {
         Animated.timing(drift, { toValue: 0, duration: 3000, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
       ]),
     ).start();
-    Animated.timing(progress, { toValue: 1, duration: 2200, easing: Easing.out(Easing.cubic), useNativeDriver: false }).start(
-      () => {
-        const t = setTimeout(() => navigation.replace('MainMenu'), 350);
-        return () => clearTimeout(t);
-      },
-    );
+    Animated.timing(progress, { toValue: 1, duration: 2200, easing: Easing.out(Easing.cubic), useNativeDriver: false }).start();
+    // Navigate on a hard timer, NOT the animation callback — guarantees the splash
+    // always advances on-device even if the animation is throttled or interrupted.
+    const nav = setTimeout(() => navigation.replace('MainMenu'), 2600);
+    return () => clearTimeout(nav);
   }, [navigation, progress, drift]);
 
   const translateY = drift.interpolate({ inputRange: [0, 1], outputRange: [0, -6] });
