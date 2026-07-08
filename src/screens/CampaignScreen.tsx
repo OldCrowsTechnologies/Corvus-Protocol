@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, Image, Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import { buffIcon, itemArt, type BuffIconName } from '@/art';
-import { playSfx, playSfxThrottled, playVoice } from '@/audio/sounds';
+import { playSfx, playSfxThrottled, playVoice, startMusic, stopMusic } from '@/audio/sounds';
 import { CharacterAvatar } from '@/components/CharacterAvatar';
 import { FeatherPill } from '@/components/CurrencyPill';
 import { ResonanceIcon } from '@/components/icons';
@@ -182,6 +182,12 @@ export function CampaignScreen({ navigation, route }: Props) {
     },
     [account.consumables.ritual, difficulty, flushXp, navigation, store],
   );
+
+  // ambient music while defending; stops when leaving the battlefield
+  useEffect(() => {
+    startMusic();
+    return () => stopMusic();
+  }, []);
 
   // game loop
   useEffect(() => {

@@ -136,6 +136,7 @@ export interface BoneCastState {
 }
 
 export interface Settings {
+  music: boolean;
   sfx: boolean;
   voice: boolean;
   graphics: 'low' | 'high';

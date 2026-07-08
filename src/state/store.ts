@@ -218,7 +218,7 @@ export const useStore = create<GameStore>()(
   persist(
     (set, get) => ({
       account: defaultAccount(),
-      settings: { sfx: true, voice: true, graphics: 'high', debugMetrics: false },
+      settings: { music: true, sfx: true, voice: true, graphics: 'high', debugMetrics: false },
       rituals: defaultRituals(),
       boneCast: { freeCastsRemaining: 1, castsSincePity: 0, lastResult: null },
       lastCampaign: null,

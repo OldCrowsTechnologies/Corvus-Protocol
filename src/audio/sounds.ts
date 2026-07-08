@@ -43,6 +43,48 @@ const SFX = {
 
 export type SfxName = keyof typeof SFX;
 
+const MUSIC = require('../../assets/audio/music/ambient.wav');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let musicPlayer: any = null;
+function musicOn(): boolean {
+  try {
+    return useStore.getState().settings.music;
+  } catch {
+    return false;
+  }
+}
+
+/** Start the looping ambient bed (idempotent). No-op if music is off or audio errors. */
+export function startMusic(): void {
+  if (!musicOn()) return;
+  const audio = getAudio();
+  if (!audio) return;
+  try {
+    if (!musicPlayer) {
+      musicPlayer = audio.createAudioPlayer(MUSIC);
+      musicPlayer.loop = true;
+      musicPlayer.volume = 0.5;
+    }
+    musicPlayer.play();
+  } catch {
+    /* silence */
+  }
+}
+
+export function stopMusic(): void {
+  try {
+    musicPlayer?.pause();
+  } catch {
+    /* silence */
+  }
+}
+
+/** React to the music setting toggling at runtime. */
+export function setMusicEnabled(on: boolean): void {
+  if (on) startMusic();
+  else stopMusic();
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const players: Partial<Record<SfxName, any>> = {};
 const lastPlayed: Partial<Record<SfxName, number>> = {};

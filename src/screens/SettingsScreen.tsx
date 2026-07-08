@@ -5,6 +5,7 @@ import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { Screen } from '@/components/Screen';
 import { T } from '@/components/T';
 import { Header, Panel, Toggle } from '@/components/ui';
+import { setMusicEnabled } from '@/audio/sounds';
 import { useStore } from '@/state/store';
 import { colors, radii } from '@/theme/tokens';
 import type { RootStackParamList } from '@/navigation/types';
@@ -36,6 +37,7 @@ export function SettingsScreen({ navigation }: Props) {
 
       <ScrollView contentContainerStyle={styles.body} showsVerticalScrollIndicator={false}>
         <Section label="AUDIO">
+          <ToggleRow label="Music" value={settings.music} onToggle={() => { const next = !settings.music; setSetting('music', next); setMusicEnabled(next); }} last={false} />
           <ToggleRow label="Sound effects" value={settings.sfx} onToggle={() => setSetting('sfx', !settings.sfx)} last={false} />
           <ToggleRow label="Voice lines" value={settings.voice} onToggle={() => setSetting('voice', !settings.voice)} last />
         </Section>
