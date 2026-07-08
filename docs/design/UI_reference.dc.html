@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  a { color: #00C2C7; }
+  a:hover { color: #5fe3e6; }
+  @keyframes cpPulse { 0%,100% { opacity: .55; transform: scale(1); } 50% { opacity: 1; transform: scale(1.04); } }
+  @keyframes cpGlow { 0%,100% { box-shadow: 0 0 22px rgba(0,194,199,.35), inset 0 0 0 1px rgba(0,194,199,.5); } 50% { box-shadow: 0 0 40px rgba(0,194,199,.6), inset 0 0 0 1px rgba(0,194,199,.85); } }
+  @keyframes cpLoad { 0% { transform: translateX(-100%); } 100% { transform: translateX(0%); } }
+  @keyframes cpDrift { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:radial-gradient(140% 100% at 50% -10%, #0f1621 0%, #080b10 55%, #05070a 100%);font-family:'Space Grotesk',system-ui,sans-serif;color:#F4F6F8;padding:56px 56px 96px;">
+
+  <!-- ===== SYSTEM HEADER ===== -->
+  <div style="max-width:1240px;margin:0 auto 64px;">
+    <div style="display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.42em;color:#00C2C7;text-transform:uppercase;">Old Crows Wireless · Mad Apps</div>
+      <div style="height:1px;flex:1;min-width:40px;background:linear-gradient(90deg,rgba(0,194,199,.5),transparent);"></div>
+    </div>
+    <h1 style="font-family:'Cinzel',serif;font-weight:800;font-size:60px;letter-spacing:.06em;margin:14px 0 6px;color:#F4F6F8;text-shadow:0 0 40px rgba(0,194,199,.25);">CORVUS PROTOCOL</h1>
+    <div style="font-family:'Cinzel',serif;font-weight:500;font-size:20px;letter-spacing:.5em;color:#B8922A;margin-bottom:26px;">THE OMEN WARS · UI SYSTEM</div>
+
+    <div style="display:flex;gap:40px;flex-wrap:wrap;">
+      <div>
+        <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.24em;color:#6c7c8f;text-transform:uppercase;margin-bottom:12px;">Palette</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;max-width:520px;">
+          <div style="width:64px;"><div style="height:52px;border-radius:8px;background:#0A0E12;border:1px solid #223042;"></div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#6c7c8f;margin-top:5px;">#0A0E12</div></div>
+          <div style="width:64px;"><div style="height:52px;border-radius:8px;background:#1A2332;"></div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#6c7c8f;margin-top:5px;">#1A2332</div></div>
+          <div style="width:64px;"><div style="height:52px;border-radius:8px;background:#0D6E7A;"></div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#6c7c8f;margin-top:5px;">#0D6E7A</div></div>
+          <div style="width:64px;"><div style="height:52px;border-radius:8px;background:#00C2C7;box-shadow:0 0 16px rgba(0,194,199,.5);"></div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#6c7c8f;margin-top:5px;">#00C2C7</div></div>
+          <div style="width:64px;"><div style="height:52px;border-radius:8px;background:#B8922A;box-shadow:0 0 16px rgba(184,146,42,.4);"></div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#6c7c8f;margin-top:5px;">#B8922A</div></div>
+          <div style="width:64px;"><div style="height:52px;border-radius:8px;background:#6B4FA0;"></div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#6c7c8f;margin-top:5px;">#6B4FA0</div></div>
+          <div style="width:64px;"><div style="height:52px;border-radius:8px;background:#F4F6F8;"></div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#6c7c8f;margin-top:5px;">#F4F6F8</div></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.24em;color:#6c7c8f;text-transform:uppercase;margin-bottom:12px;">Type</div>
+        <div style="font-family:'Cinzel',serif;font-weight:700;font-size:26px;color:#F4F6F8;line-height:1.1;">Cinzel <span style="color:#6c7c8f;font-size:14px;font-family:'Space Mono',monospace;">— display / titles</span></div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:20px;color:#F4F6F8;margin-top:6px;">Space Grotesk <span style="color:#6c7c8f;font-size:14px;font-family:'Space Mono',monospace;">— UI / body</span></div>
+        <div style="font-family:'Space Mono',monospace;font-size:16px;color:#00C2C7;margin-top:6px;">Space Mono <span style="color:#6c7c8f;font-size:14px;">— stats / numbers</span></div>
+      </div>
+    </div>
+
+    <div style="margin-top:40px;">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.24em;color:#6c7c8f;text-transform:uppercase;margin-bottom:14px;">The Murder — cast reference art (provided)</div>
+      <div style="display:flex;gap:22px;flex-wrap:wrap;">
+        <div style="width:112px;text-align:center;">
+          <div style="width:88px;height:88px;margin:0 auto 10px;border-radius:50%;overflow:hidden;background:#0c1420;border:2px solid #00C2C7;box-shadow:0 0 20px rgba(0,194,199,.45);"><img src="assets/cast/corvus_front.png" alt="Corvus" style="width:100%;height:100%;object-fit:cover;object-position:50% 30%;"></div>
+          <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14px;color:#F4F6F8;">CORVUS</div>
+          <div style="font-family:'Space Mono',monospace;font-size:9px;color:#00C2C7;letter-spacing:.06em;margin-top:2px;">CHAOS · CROWD CONTROL</div>
+        </div>
+        <div style="width:112px;text-align:center;">
+          <div style="width:88px;height:88px;margin:0 auto 10px;border-radius:50%;overflow:hidden;background:#0c1420;border:2px solid #6B4FA0;box-shadow:0 0 20px rgba(107,79,160,.45);"><img src="assets/cast/sage_front.png" alt="Sage" style="width:100%;height:100%;object-fit:cover;object-position:50% 30%;"></div>
+          <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14px;color:#F4F6F8;">SAGE</div>
+          <div style="font-family:'Space Mono',monospace;font-size:9px;color:#a58fd6;letter-spacing:.06em;margin-top:2px;">WARDING · SUPPORT</div>
+        </div>
+        <div style="width:112px;text-align:center;">
+          <div style="width:88px;height:88px;margin:0 auto 10px;border-radius:50%;overflow:hidden;background:#0c1420;border:2px solid #3ecf6e;box-shadow:0 0 20px rgba(62,207,110,.4);"><img src="assets/cast/pip_front.png" alt="Pip" style="width:100%;height:100%;object-fit:cover;object-position:50% 40%;"></div>
+          <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14px;color:#F4F6F8;">PIP</div>
+          <div style="font-family:'Space Mono',monospace;font-size:9px;color:#7de6a0;letter-spacing:.06em;margin-top:2px;">THEFT · CRIT</div>
+        </div>
+        <div style="width:112px;text-align:center;">
+          <div style="width:88px;height:88px;margin:0 auto 10px;border-radius:50%;overflow:hidden;background:#0c1420;border:2px solid #B8922A;box-shadow:0 0 20px rgba(184,146,42,.4);"><img src="assets/cast/mira_front.png" alt="Mira" style="width:100%;height:100%;object-fit:cover;object-position:50% 30%;"></div>
+          <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14px;color:#F4F6F8;">MIRA</div>
+          <div style="font-family:'Space Mono',monospace;font-size:9px;color:#E4C15A;letter-spacing:.06em;margin-top:2px;">AMPLIFY · EXECUTE</div>
+        </div>
+        <div style="width:112px;text-align:center;position:relative;">
+          <div style="position:absolute;top:-4px;right:6px;font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.1em;color:#04191c;background:#E4C15A;padding:2px 6px;border-radius:999px;">NEW</div>
+          <div style="width:88px;height:88px;margin:0 auto 10px;border-radius:50%;overflow:hidden;background:#0c1420;border:2px solid #c05a3f;box-shadow:0 0 20px rgba(192,90,63,.4);"><img src="assets/cast/rosa_front.png" alt="Rosa" style="width:100%;height:100%;object-fit:cover;object-position:50% 20%;"></div>
+          <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14px;color:#F4F6F8;">ROSA</div>
+          <div style="font-family:'Space Mono',monospace;font-size:9px;color:#e0987f;letter-spacing:.06em;margin-top:2px;">PURSUIT · MARKING</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:36px;display:flex;gap:16px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:280px;padding:16px 18px;border-radius:14px;background:rgba(184,146,42,.06);border:1px solid rgba(184,146,42,.28);">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:6px;"><span style="width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#E4C15A,#B8922A);box-shadow:0 0 10px rgba(184,146,42,.6);"></span><span style="font-family:'Cinzel',serif;font-weight:700;font-size:15px;color:#E4C15A;">Resonance</span><span style="font-family:'Space Mono',monospace;font-size:9px;color:#8a7a3f;">soft</span></div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#a9bccc;">Idle tick + kills + prestige multiplier. Spent on towers, rituals, waves. Uncapped, resets on prestige.</div>
+      </div>
+      <div style="flex:1;min-width:280px;padding:16px 18px;border-radius:14px;background:rgba(0,194,199,.06);border:1px solid rgba(0,194,199,.28);">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:6px;"><span style="display:inline-block;width:14px;height:14px;background:linear-gradient(135deg,#00C2C7,#B8922A);transform:rotate(45deg);border-radius:3px;box-shadow:0 0 8px rgba(0,194,199,.6);"></span><span style="font-family:'Cinzel',serif;font-weight:700;font-size:15px;color:#8fd8da;">Feathers</span><span style="font-family:'Space Mono',monospace;font-size:9px;color:#5f9b9e;">premium</span></div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#a9bccc;">Earned from Daily Rituals, quests &amp; wave milestones — or bought in packs. Spent on Bone-Cast rolls, instant unlocks, cosmetics. Never resets on prestige.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREENS ROW ===== -->
+  <div style="display:flex;flex-wrap:wrap;gap:56px;justify-content:center;align-items:flex-start;max-width:1560px;margin:0 auto;">
+
+    <!-- ================= 01 SPLASH ================= -->
+    <div data-screen-label="01 Splash" style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.24em;color:#00C2C7;text-transform:uppercase;padding:5px 14px;border:1px solid rgba(0,194,199,.3);border-radius:999px;">01 · SPLASH</div>
+      <div style="width:344px;padding:12px;border-radius:46px;background:#05070a;border:1px solid #1c2735;box-shadow:0 40px 90px -24px rgba(0,0,0,.9), inset 0 0 0 2px #0e141d;">
+        <div style="position:relative;width:320px;height:660px;border-radius:36px;overflow:hidden;background:radial-gradient(120% 70% at 50% 30%, #14202f 0%, #0b131d 45%, #070b10 100%);">
+          <div style="height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-family:'Space Mono',monospace;font-size:12px;color:#cdd6e2;">
+            <span>9:41</span>
+            <span style="display:flex;gap:5px;align-items:center;"><span style="width:16px;height:9px;border:1px solid #cdd6e2;border-radius:2px;display:inline-block;"></span><span style="width:15px;height:9px;background:#cdd6e2;border-radius:2px;display:inline-block;"></span></span>
+          </div>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 34px;">
+            <div style="position:relative;width:186px;height:186px;display:flex;align-items:center;justify-content:center;animation:cpDrift 6s ease-in-out infinite;">
+              <div style="position:absolute;inset:0;border-radius:50%;border:1px solid rgba(0,194,199,.35);animation:cpPulse 4s ease-in-out infinite;"></div>
+              <div style="position:absolute;inset:26px;border-radius:50%;border:1px dashed rgba(184,146,42,.5);"></div>
+              <div style="position:absolute;inset:52px;border-radius:50%;background:repeating-linear-gradient(45deg,#0f1826,#0f1826 7px,#0c141f 7px,#0c141f 14px);border:1px solid rgba(0,194,199,.4);box-shadow:0 0 40px rgba(0,194,199,.35);"></div>
+              <div style="position:relative;font-family:'Space Mono',monospace;font-size:9px;color:#5f7183;text-align:center;line-height:1.4;">CORVUS<br>SIGIL</div>
+            </div>
+            <h2 style="font-family:'Cinzel',serif;font-weight:800;font-size:30px;letter-spacing:.06em;margin:38px 0 4px;text-align:center;text-shadow:0 0 30px rgba(0,194,199,.4);">CORVUS<br>PROTOCOL</h2>
+            <div style="font-family:'Cinzel',serif;font-size:12px;letter-spacing:.52em;color:#B8922A;">THE OMEN WARS</div>
+          </div>
+          <div style="position:absolute;left:34px;right:34px;bottom:64px;">
+            <div style="height:4px;border-radius:999px;background:#111a26;overflow:hidden;">
+              <div style="height:100%;width:66%;background:linear-gradient(90deg,#0D6E7A,#00C2C7);box-shadow:0 0 14px rgba(0,194,199,.7);border-radius:999px;"></div>
+            </div>
+            <div style="font-family:'Space Mono',monospace;font-size:10px;color:#6c7c8f;letter-spacing:.14em;margin-top:12px;text-align:center;">AWAKENING THE TONAL ENGINE…</div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:20px;text-align:center;font-family:'Space Mono',monospace;font-size:9px;color:#3f4c5c;letter-spacing:.2em;">OLD CROWS WIRELESS · MAD APPS</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 02 MAIN MENU ================= -->
+    <div data-screen-label="02 Main Menu" style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.24em;color:#00C2C7;text-transform:uppercase;padding:5px 14px;border:1px solid rgba(0,194,199,.3);border-radius:999px;">02 · MAIN MENU</div>
+      <div style="width:344px;padding:12px;border-radius:46px;background:#05070a;border:1px solid #1c2735;box-shadow:0 40px 90px -24px rgba(0,0,0,.9), inset 0 0 0 2px #0e141d;">
+        <div style="position:relative;width:320px;height:660px;border-radius:36px;overflow:hidden;background:radial-gradient(120% 60% at 50% 100%, #14202f 0%, #0b131d 50%, #070b10 100%);">
+          <div style="position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);width:340px;height:340px;border-radius:50%;border:1px solid rgba(0,194,199,.1);"></div>
+          <div style="position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:240px;height:240px;border-radius:50%;border:1px dashed rgba(184,146,42,.14);"></div>
+
+          <div style="position:relative;height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-family:'Space Mono',monospace;font-size:12px;color:#cdd6e2;">
+            <span>9:41</span>
+            <span style="display:flex;gap:5px;align-items:center;"><span style="width:16px;height:9px;border:1px solid #cdd6e2;border-radius:2px;"></span><span style="width:15px;height:9px;background:#cdd6e2;border-radius:2px;"></span></span>
+          </div>
+
+          <div style="position:relative;padding:14px 20px 0;display:flex;justify-content:space-between;align-items:flex-start;">
+            <div style="display:flex;align-items:center;gap:9px;padding:7px 12px;border-radius:999px;background:rgba(184,146,42,.1);border:1px solid rgba(184,146,42,.4);">
+              <span style="width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#E4C15A,#B8922A);box-shadow:0 0 10px rgba(184,146,42,.7);"></span>
+              <span style="font-family:'Space Mono',monospace;font-size:14px;color:#E4C15A;font-weight:700;">45,320</span>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;color:#6c7c8f;">EPOCH 3</div>
+              <div style="font-family:'Space Mono',monospace;font-size:15px;color:#00C2C7;font-weight:700;">3.375×</div>
+            </div>
+          </div>
+
+          <div style="position:relative;text-align:center;margin-top:52px;">
+            <h2 style="font-family:'Cinzel',serif;font-weight:800;font-size:34px;letter-spacing:.05em;margin:0;text-shadow:0 0 30px rgba(0,194,199,.35);">CORVUS<br>PROTOCOL</h2>
+            <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:.5em;color:#B8922A;margin-top:6px;">THE OMEN WARS</div>
+          </div>
+
+          <div style="position:absolute;left:24px;right:24px;bottom:34px;display:flex;flex-direction:column;gap:13px;">
+            <button style="all:unset;cursor:pointer;position:relative;padding:16px 20px;border-radius:16px;background:linear-gradient(135deg,#0D6E7A,#00C2C7);animation:cpGlow 4s ease-in-out infinite;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-family:'Cinzel',serif;font-weight:700;font-size:20px;letter-spacing:.08em;color:#04191c;">PLAY</span>
+                <span style="font-family:'Space Mono',monospace;font-size:11px;color:rgba(4,25,28,.8);">RESUME ▸</span>
+              </div>
+              <div style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(4,25,28,.75);margin-top:4px;letter-spacing:.1em;">WAVE 12/15 · NORMAL</div>
+            </button>
+            <button style="all:unset;cursor:pointer;padding:15px 20px;border-radius:16px;background:rgba(107,79,160,.14);border:1px solid rgba(107,79,160,.5);display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-family:'Cinzel',serif;font-weight:600;font-size:17px;letter-spacing:.08em;color:#c3b2e6;">PRESTIGE</span>
+              <span style="font-family:'Space Mono',monospace;font-size:11px;color:#8a7bb5;">→ EPOCH 4</span>
+            </button>
+            <div style="display:flex;gap:13px;">
+              <button style="all:unset;cursor:pointer;flex:1;text-align:center;padding:15px;border-radius:16px;background:rgba(0,194,199,.07);border:1px solid rgba(0,194,199,.28);font-family:'Cinzel',serif;font-weight:600;font-size:16px;letter-spacing:.08em;color:#8fd8da;">SHOP</button>
+              <button style="all:unset;cursor:pointer;flex:1;text-align:center;padding:15px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);font-family:'Cinzel',serif;font-weight:600;font-size:16px;letter-spacing:.08em;color:#8a97a8;">SETTINGS</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 03 DIFFICULTY ================= -->
+    <div data-screen-label="03 Difficulty Select" style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.24em;color:#00C2C7;text-transform:uppercase;padding:5px 14px;border:1px solid rgba(0,194,199,.3);border-radius:999px;">03 · DIFFICULTY</div>
+      <div style="width:344px;padding:12px;border-radius:46px;background:#05070a;border:1px solid #1c2735;box-shadow:0 40px 90px -24px rgba(0,0,0,.9), inset 0 0 0 2px #0e141d;">
+        <div style="position:relative;width:320px;height:660px;border-radius:36px;overflow:hidden;background:radial-gradient(120% 70% at 50% 0%, #14202f 0%, #0b131d 50%, #070b10 100%);">
+          <div style="height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-family:'Space Mono',monospace;font-size:12px;color:#cdd6e2;"><span>9:41</span><span style="display:flex;gap:5px;align-items:center;"><span style="width:16px;height:9px;border:1px solid #cdd6e2;border-radius:2px;"></span><span style="width:15px;height:9px;background:#cdd6e2;border-radius:2px;"></span></span></div>
+
+          <div style="padding:20px 24px 0;display:flex;align-items:center;gap:14px;">
+            <div style="width:34px;height:34px;border-radius:12px;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;color:#8a97a8;font-size:18px;">‹</div>
+            <div>
+              <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.24em;color:#6c7c8f;">CAMPAIGN I</div>
+              <div style="font-family:'Cinzel',serif;font-weight:700;font-size:22px;letter-spacing:.04em;">CHOOSE YOUR TRIAL</div>
+            </div>
+          </div>
+
+          <div style="padding:24px 24px 0;display:flex;flex-direction:column;gap:14px;">
+            <!-- Easy -->
+            <div style="padding:16px;border-radius:18px;background:linear-gradient(160deg,#141d2b,#0c131d);border:1px solid rgba(255,255,255,.08);">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div style="font-family:'Cinzel',serif;font-weight:700;font-size:19px;color:#F4F6F8;">EASY</div>
+                <div style="font-family:'Space Mono',monospace;font-size:12px;color:#6c7c8f;">0.7× reward</div>
+              </div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#8a97a8;margin-top:6px;">Gentler waves. Enemy health ×0.7. For learning the ritual.</div>
+            </div>
+            <!-- Normal (selected) -->
+            <div style="padding:16px;border-radius:18px;background:linear-gradient(160deg,#0f2a2c,#0b1d22);border:1px solid rgba(0,194,199,.6);box-shadow:0 0 30px rgba(0,194,199,.22);position:relative;">
+              <div style="position:absolute;top:14px;right:14px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.16em;color:#04191c;background:#00C2C7;padding:3px 8px;border-radius:999px;">SELECTED</div>
+              <div style="font-family:'Cinzel',serif;font-weight:700;font-size:19px;color:#F4F6F8;">NORMAL</div>
+              <div style="font-family:'Space Mono',monospace;font-size:12px;color:#00C2C7;margin-top:2px;">1.0× reward</div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#a9bccc;margin-top:6px;">The intended balance. 15 waves, Whisper at wave 15.</div>
+            </div>
+            <!-- Hard -->
+            <div style="padding:16px;border-radius:18px;background:linear-gradient(160deg,#241826,#160f1d);border:1px solid rgba(107,79,160,.4);">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div style="font-family:'Cinzel',serif;font-weight:700;font-size:19px;color:#F4F6F8;">HARD</div>
+                <div style="font-family:'Space Mono',monospace;font-size:12px;color:#b39be0;">1.3× reward</div>
+              </div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#8a97a8;margin-top:6px;">Enemy health ×1.3. Boss moves faster. For the devout.</div>
+            </div>
+          </div>
+
+          <div style="position:absolute;left:24px;right:24px;bottom:34px;">
+            <button style="all:unset;cursor:pointer;display:block;text-align:center;padding:16px;border-radius:16px;background:linear-gradient(135deg,#0D6E7A,#00C2C7);font-family:'Cinzel',serif;font-weight:700;font-size:18px;letter-spacing:.1em;color:#04191c;box-shadow:0 0 26px rgba(0,194,199,.4);">BEGIN CAMPAIGN</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 04 CAMPAIGN HUD ================= -->
+    <div data-screen-label="04 Campaign HUD" style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.24em;color:#B8922A;text-transform:uppercase;padding:5px 14px;border:1px solid rgba(184,146,42,.4);border-radius:999px;background:rgba(184,146,42,.08);">04 · CAMPAIGN — HERO</div>
+      <div style="width:344px;padding:12px;border-radius:46px;background:#05070a;border:1px solid #1c2735;box-shadow:0 40px 90px -24px rgba(0,0,0,.9), inset 0 0 0 2px #0e141d;">
+        <div style="position:relative;width:320px;height:660px;border-radius:36px;overflow:hidden;background:radial-gradient(120% 60% at 50% 42%, #16233a 0%, #0c1420 55%, #070b10 100%);">
+          <div style="height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-family:'Space Mono',monospace;font-size:12px;color:#cdd6e2;"><span>9:41</span><span style="display:flex;gap:5px;align-items:center;"><span style="width:16px;height:9px;border:1px solid #cdd6e2;border-radius:2px;"></span><span style="width:15px;height:9px;background:#cdd6e2;border-radius:2px;"></span></span></div>
+
+          <!-- Character status row -->
+          <div style="padding:8px 12px 0;display:grid;grid-template-columns:repeat(4,1fr);gap:7px;">
+            <div style="padding:6px 6px 7px;border-radius:11px;background:rgba(0,194,199,.1);border:1px solid rgba(0,194,199,.4);text-align:center;">
+              <div style="width:22px;height:22px;margin:0 auto 3px;border-radius:50%;overflow:hidden;border:1px solid rgba(0,194,199,.7);"><img src="assets/cast/corvus_front.png" alt="Corvus" style="width:100%;height:100%;object-fit:cover;object-position:50% 30%;"></div>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#8fd8da;letter-spacing:.06em;">CORVUS</div>
+              <div style="font-family:'Space Mono',monospace;font-size:12px;color:#F4F6F8;font-weight:700;">L45</div>
+              <div style="height:3px;border-radius:2px;background:#0d2226;margin-top:3px;"><div style="height:100%;width:70%;background:#00C2C7;border-radius:2px;"></div></div>
+            </div>
+            <div style="padding:6px 6px 7px;border-radius:11px;background:rgba(107,79,160,.16);border:1px solid rgba(107,79,160,.5);text-align:center;">
+              <div style="width:22px;height:22px;margin:0 auto 3px;border-radius:50%;overflow:hidden;border:1px solid rgba(107,79,160,.7);"><img src="assets/cast/sage_front.png" alt="Sage" style="width:100%;height:100%;object-fit:cover;object-position:50% 30%;"></div>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#c3b2e6;letter-spacing:.06em;">SAGE</div>
+              <div style="font-family:'Space Mono',monospace;font-size:12px;color:#F4F6F8;font-weight:700;">L38</div>
+              <div style="height:3px;border-radius:2px;background:#1a1330;margin-top:3px;"><div style="height:100%;width:45%;background:#6B4FA0;border-radius:2px;"></div></div>
+            </div>
+            <div style="padding:6px 6px 7px;border-radius:11px;background:rgba(62,207,110,.14);border:1px solid rgba(62,207,110,.45);text-align:center;">
+              <div style="width:22px;height:22px;margin:0 auto 3px;border-radius:50%;overflow:hidden;border:1px solid rgba(62,207,110,.7);"><img src="assets/cast/pip_front.png" alt="Pip" style="width:100%;height:100%;object-fit:cover;object-position:50% 40%;"></div>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#9be6b3;letter-spacing:.06em;">PIP</div>
+              <div style="font-family:'Space Mono',monospace;font-size:12px;color:#F4F6F8;font-weight:700;">L52</div>
+              <div style="height:3px;border-radius:2px;background:#10241a;margin-top:3px;"><div style="height:100%;width:84%;background:#3ecf6e;border-radius:2px;"></div></div>
+            </div>
+            <div style="padding:6px 6px 7px;border-radius:11px;background:rgba(184,146,42,.12);border:1px solid rgba(184,146,42,.42);text-align:center;">
+              <div style="width:22px;height:22px;margin:0 auto 3px;border-radius:50%;overflow:hidden;border:1px solid rgba(184,146,42,.7);"><img src="assets/cast/mira_front.png" alt="Mira" style="width:100%;height:100%;object-fit:cover;object-position:50% 30%;"></div>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#E4C15A;letter-spacing:.06em;">MIRA</div>
+              <div style="font-family:'Space Mono',monospace;font-size:12px;color:#F4F6F8;font-weight:700;">L31</div>
+              <div style="height:3px;border-radius:2px;background:#2a2210;margin-top:3px;"><div style="height:100%;width:30%;background:#B8922A;border-radius:2px;"></div></div>
+            </div>
+          </div>
+
+          <!-- Wave + boss banner -->
+          <div style="margin:10px 12px 0;padding:9px 13px;border-radius:12px;background:linear-gradient(90deg,rgba(107,79,160,.22),rgba(10,14,18,.4));border:1px solid rgba(107,79,160,.45);">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14px;letter-spacing:.06em;color:#F4F6F8;">WAVE 12/15</div>
+              <div style="font-family:'Space Mono',monospace;font-size:10px;color:#c3b2e6;letter-spacing:.1em;">WHISPER · PHASE 2</div>
+            </div>
+            <div style="height:7px;border-radius:999px;background:#150f22;margin-top:6px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(107,79,160,.4);"><div style="height:100%;width:38%;background:linear-gradient(90deg,#6B4FA0,#b39be0);border-radius:999px;box-shadow:0 0 12px rgba(107,79,160,.8);"></div></div>
+            <div style="font-family:'Space Mono',monospace;font-size:8px;color:#c9a5e0;letter-spacing:.08em;margin-top:6px;">⚠ AFFIX: SWARM — randomized spawn order this run</div>
+          </div>
+
+          <!-- Isometric board placeholder -->
+          <div style="margin:12px 12px 0;position:relative;height:280px;border-radius:16px;overflow:hidden;background:repeating-linear-gradient(45deg,#0f1826,#0f1826 9px,#0c141f 9px,#0c141f 18px);border:1px dashed rgba(0,194,199,.28);">
+            <div style="position:absolute;top:10px;left:12px;font-family:'Space Mono',monospace;font-size:9px;color:#5f7183;letter-spacing:.12em;">SUMMONING CIRCLE — ISOMETRIC 45°</div>
+            <!-- circle -->
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:180px;height:96px;border-radius:50%;border:1px solid rgba(0,194,199,.3);"></div>
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:118px;height:62px;border-radius:50%;border:1px dashed rgba(184,146,42,.4);"></div>
+            <!-- range circle -->
+            <div style="position:absolute;top:38%;left:34%;transform:translate(-50%,-50%);width:96px;height:96px;border-radius:50%;border:1px solid rgba(0,194,199,.4);background:rgba(0,194,199,.05);"></div>
+            <!-- tower dots (real perch art) -->
+            <div style="position:absolute;top:38%;left:34%;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;overflow:hidden;box-shadow:0 0 12px rgba(0,194,199,.8);border:1px solid #00C2C7;"><img src="assets/cast/corvus_front.png" alt="Corvus tower" style="width:100%;height:100%;object-fit:cover;object-position:50% 30%;"></div>
+            <div style="position:absolute;top:58%;left:60%;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;overflow:hidden;box-shadow:0 0 12px rgba(107,79,160,.8);border:1px solid #6B4FA0;"><img src="assets/cast/sage_front.png" alt="Sage tower" style="width:100%;height:100%;object-fit:cover;object-position:50% 30%;"></div>
+            <div style="position:absolute;top:64%;left:40%;transform:translate(-50%,-50%);width:24px;height:24px;border-radius:50%;overflow:hidden;box-shadow:0 0 12px rgba(62,207,110,.8);border:1px solid #3ecf6e;"><img src="assets/cast/pip_front.png" alt="Pip tower" style="width:100%;height:100%;object-fit:cover;object-position:50% 40%;"></div>
+            <!-- ghosts -->
+            <div style="position:absolute;top:26%;left:64%;width:20px;height:26px;border-radius:50% 50% 46% 46%;background:rgba(200,214,230,.28);border:1px solid rgba(200,214,230,.5);"></div>
+            <div style="position:absolute;top:44%;left:74%;width:16px;height:22px;border-radius:50% 50% 46% 46%;background:rgba(200,214,230,.2);border:1px solid rgba(200,214,230,.4);"></div>
+            <!-- boss -->
+            <div style="position:absolute;top:30%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;border-radius:10px;background:repeating-linear-gradient(45deg,#2a1d3a,#2a1d3a 5px,#1c1329 5px,#1c1329 10px);border:1px solid rgba(107,79,160,.7);box-shadow:0 0 18px rgba(107,79,160,.6);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:7px;color:#b39be0;text-align:center;">BOSS</div>
+            <!-- floating damage number -->
+            <div style="position:absolute;top:20%;left:44%;font-family:'Space Mono',monospace;font-weight:700;font-size:15px;color:#E4C15A;text-shadow:0 0 10px rgba(184,146,42,.8);">1.2K<span style="font-size:8px;"> CRIT</span></div>
+          </div>
+
+          <!-- Tower palette carousel -->
+          <div style="position:absolute;left:0;right:0;bottom:78px;padding:0 12px;">
+            <div style="display:flex;gap:8px;overflow:hidden;">
+              <div style="min-width:66px;padding:8px 6px;border-radius:12px;background:rgba(0,194,199,.1);border:1px solid rgba(0,194,199,.4);text-align:center;">
+                <div style="width:26px;height:26px;margin:0 auto 5px;border-radius:50%;overflow:hidden;box-shadow:0 0 10px rgba(0,194,199,.6);"><img src="assets/cast/corvus_front.png" alt="Corvus" style="width:100%;height:100%;object-fit:cover;object-position:50% 30%;"></div>
+                <div style="font-family:'Space Mono',monospace;font-size:8px;color:#8fd8da;letter-spacing:.06em;">CHAOS</div>
+                <div style="font-family:'Space Mono',monospace;font-size:11px;color:#E4C15A;font-weight:700;">200</div>
+              </div>
+              <div style="min-width:66px;padding:8px 6px;border-radius:12px;background:rgba(107,79,160,.16);border:1px solid rgba(107,79,160,.5);text-align:center;">
+                <div style="width:26px;height:26px;margin:0 auto 5px;border-radius:50%;overflow:hidden;box-shadow:0 0 10px rgba(107,79,160,.7);"><img src="assets/cast/sage_front.png" alt="Sage" style="width:100%;height:100%;object-fit:cover;object-position:50% 30%;"></div>
+                <div style="font-family:'Space Mono',monospace;font-size:8px;color:#c3b2e6;letter-spacing:.06em;">SUPPORT</div>
+                <div style="font-family:'Space Mono',monospace;font-size:11px;color:#E4C15A;font-weight:700;">300</div>
+              </div>
+              <div style="min-width:66px;padding:8px 6px;border-radius:12px;background:rgba(62,207,110,.14);border:1px solid rgba(62,207,110,.45);text-align:center;">
+                <div style="width:26px;height:26px;margin:0 auto 5px;border-radius:50%;overflow:hidden;box-shadow:0 0 10px rgba(62,207,110,.6);"><img src="assets/cast/pip_front.png" alt="Pip" style="width:100%;height:100%;object-fit:cover;object-position:50% 40%;"></div>
+                <div style="font-family:'Space Mono',monospace;font-size:8px;color:#9be6b3;letter-spacing:.06em;">THEFT</div>
+                <div style="font-family:'Space Mono',monospace;font-size:11px;color:#E4C15A;font-weight:700;">250</div>
+              </div>
+              <div style="min-width:66px;padding:8px 6px;border-radius:12px;background:rgba(184,146,42,.12);border:1px solid rgba(184,146,42,.42);text-align:center;">
+                <div style="width:26px;height:26px;margin:0 auto 5px;border-radius:50%;overflow:hidden;box-shadow:0 0 10px rgba(184,146,42,.6);"><img src="assets/cast/mira_front.png" alt="Mira" style="width:100%;height:100%;object-fit:cover;object-position:50% 30%;"></div>
+                <div style="font-family:'Space Mono',monospace;font-size:8px;color:#E4C15A;letter-spacing:.06em;">EXEC</div>
+                <div style="font-family:'Space Mono',monospace;font-size:11px;color:#E4C15A;font-weight:700;">500</div>
+              </div>
+              <div style="min-width:52px;padding:8px 6px;border-radius:12px;background:rgba(255,255,255,.03);border:1px dashed rgba(255,255,255,.18);text-align:center;display:flex;flex-direction:column;justify-content:center;">
+                <div style="font-family:'Space Mono',monospace;font-size:8px;color:#8a97a8;">ITEM</div>
+                <div style="font-family:'Space Mono',monospace;font-size:9px;color:#E4C15A;margin-top:3px;">+50%</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resonance bar + controls -->
+          <div style="position:absolute;left:0;right:0;bottom:20px;padding:0 12px;display:flex;align-items:center;gap:8px;">
+            <div style="flex:1;display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;background:rgba(184,146,42,.1);border:1px solid rgba(184,146,42,.35);">
+              <span style="width:13px;height:13px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#E4C15A,#B8922A);box-shadow:0 0 8px rgba(184,146,42,.7);"></span>
+              <span style="font-family:'Space Mono',monospace;font-size:13px;color:#E4C15A;font-weight:700;">45,320</span>
+              <span style="font-family:'Space Mono',monospace;font-size:10px;color:#8a7a3f;">+50/s</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:5px;padding:9px 10px;border-radius:12px;background:rgba(0,194,199,.1);border:1px solid rgba(0,194,199,.3);"><span style="display:inline-block;width:11px;height:11px;background:linear-gradient(135deg,#00C2C7,#B8922A);transform:rotate(45deg);border-radius:2px;"></span><span style="font-family:'Space Mono',monospace;font-size:12px;color:#8fd8da;font-weight:700;">128</span></div>
+            <div style="width:42px;height:40px;border-radius:12px;background:rgba(0,194,199,.1);border:1px solid rgba(0,194,199,.3);display:flex;align-items:center;justify-content:center;color:#8fd8da;font-size:14px;">❚❚</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 05 PRESTIGE ================= -->
+    <div data-screen-label="05 Prestige" style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.24em;color:#00C2C7;text-transform:uppercase;padding:5px 14px;border:1px solid rgba(0,194,199,.3);border-radius:999px;">05 · PRESTIGE</div>
+      <div style="width:344px;padding:12px;border-radius:46px;background:#05070a;border:1px solid #1c2735;box-shadow:0 40px 90px -24px rgba(0,0,0,.9), inset 0 0 0 2px #0e141d;">
+        <div style="position:relative;width:320px;height:660px;border-radius:36px;overflow:hidden;background:radial-gradient(120% 70% at 50% 20%, #1a1430 0%, #0e0c1a 50%, #070810 100%);">
+          <div style="position:absolute;top:80px;left:50%;transform:translateX(-50%);width:280px;height:280px;border-radius:50%;border:1px solid rgba(107,79,160,.16);animation:cpPulse 5s ease-in-out infinite;"></div>
+          <div style="height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-family:'Space Mono',monospace;font-size:12px;color:#cdd6e2;position:relative;"><span>9:41</span><span style="display:flex;gap:5px;align-items:center;"><span style="width:16px;height:9px;border:1px solid #cdd6e2;border-radius:2px;"></span><span style="width:15px;height:9px;background:#cdd6e2;border-radius:2px;"></span></span></div>
+
+          <div style="position:relative;text-align:center;padding:24px 24px 0;">
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.32em;color:#8a7bb5;">ETERNAL RECURRENCE</div>
+            <h2 style="font-family:'Cinzel',serif;font-weight:800;font-size:26px;letter-spacing:.04em;margin:8px 0 0;color:#F4F6F8;text-shadow:0 0 30px rgba(107,79,160,.5);">ASCEND TO<br>EPOCH 4</h2>
+          </div>
+
+          <!-- Multiplier before/after -->
+          <div style="position:relative;margin:24px 24px 0;display:flex;align-items:center;justify-content:center;gap:16px;">
+            <div style="text-align:center;">
+              <div style="font-family:'Space Mono',monospace;font-size:9px;color:#6c7c8f;letter-spacing:.14em;">CURRENT</div>
+              <div style="font-family:'Space Mono',monospace;font-size:26px;color:#8a97a8;font-weight:700;">2.25×</div>
+            </div>
+            <div style="font-size:22px;color:#6B4FA0;">→</div>
+            <div style="text-align:center;">
+              <div style="font-family:'Space Mono',monospace;font-size:9px;color:#E4C15A;letter-spacing:.14em;">NEW</div>
+              <div style="font-family:'Space Mono',monospace;font-size:34px;color:#E4C15A;font-weight:700;text-shadow:0 0 20px rgba(184,146,42,.6);">3.375×</div>
+            </div>
+          </div>
+
+          <!-- Reset warnings -->
+          <div style="position:relative;margin:22px 24px 0;padding:14px 16px;border-radius:14px;background:rgba(107,79,160,.1);border:1px solid rgba(107,79,160,.35);">
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.16em;color:#b39be0;margin-bottom:9px;">THE PATTERN RESETS</div>
+            <div style="display:flex;justify-content:space-between;font-family:'Space Grotesk',sans-serif;font-size:12px;color:#a9bccc;padding:3px 0;"><span>Resonance 45,320</span><span style="color:#8a97a8;">→ 0</span></div>
+            <div style="display:flex;justify-content:space-between;font-family:'Space Grotesk',sans-serif;font-size:12px;color:#a9bccc;padding:3px 0;"><span>Corvus L45 · Sage L38</span><span style="color:#8a97a8;">→ 0</span></div>
+            <div style="display:flex;justify-content:space-between;font-family:'Space Grotesk',sans-serif;font-size:12px;color:#a9bccc;padding:3px 0;"><span>Pip L52 · Mira L31</span><span style="color:#8a97a8;">→ 0</span></div>
+          </div>
+
+          <!-- Unlock card -->
+          <div style="position:relative;margin:14px 24px 0;padding:12px;border-radius:14px;background:linear-gradient(135deg,rgba(184,146,42,.16),rgba(107,79,160,.12));border:1px solid rgba(184,146,42,.45);display:flex;align-items:center;gap:12px;">
+            <div style="width:48px;height:48px;border-radius:10px;background:repeating-linear-gradient(45deg,#241a10,#241a10 6px,#1c150c 6px,#1c150c 12px);border:1px dashed rgba(184,146,42,.5);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:7px;color:#8a7a3f;text-align:center;">SKIN<br>ART</div>
+            <div>
+              <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;color:#8a7a3f;">EPOCH REWARD</div>
+              <div style="font-family:'Cinzel',serif;font-weight:700;font-size:15px;color:#E4C15A;">Corvus · Plague-Bearer</div>
+            </div>
+          </div>
+
+          <div style="position:absolute;left:24px;right:24px;bottom:74px;font-family:'Space Grotesk',sans-serif;font-style:italic;font-size:11px;color:#8a7bb5;text-align:center;">“Eternal recurrence. I love it.” — Corvus</div>
+
+          <div style="position:absolute;left:24px;right:24px;bottom:30px;display:flex;gap:12px;">
+            <button style="all:unset;cursor:pointer;flex:1;text-align:center;padding:15px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.14);font-family:'Cinzel',serif;font-weight:600;font-size:15px;color:#8a97a8;">CANCEL</button>
+            <button style="all:unset;cursor:pointer;flex:1.4;text-align:center;padding:15px;border-radius:14px;background:linear-gradient(135deg,#6B4FA0,#9678d0);font-family:'Cinzel',serif;font-weight:700;font-size:15px;letter-spacing:.06em;color:#fff;box-shadow:0 0 26px rgba(107,79,160,.5);">CONFIRM ASCENT</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 06 SHOP ================= -->
+    <div data-screen-label="06 Shop" style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.24em;color:#00C2C7;text-transform:uppercase;padding:5px 14px;border:1px solid rgba(0,194,199,.3);border-radius:999px;">06 · SHOP</div>
+      <div style="width:344px;padding:12px;border-radius:46px;background:#05070a;border:1px solid #1c2735;box-shadow:0 40px 90px -24px rgba(0,0,0,.9), inset 0 0 0 2px #0e141d;">
+        <div style="position:relative;width:320px;height:660px;border-radius:36px;overflow:hidden;background:radial-gradient(120% 70% at 50% 0%, #14202f 0%, #0b131d 50%, #070b10 100%);">
+          <div style="height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-family:'Space Mono',monospace;font-size:12px;color:#cdd6e2;"><span>9:41</span><span style="display:flex;gap:5px;align-items:center;"><span style="width:16px;height:9px;border:1px solid #cdd6e2;border-radius:2px;"></span><span style="width:15px;height:9px;background:#cdd6e2;border-radius:2px;"></span></span></div>
+
+          <div style="padding:18px 24px 0;display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:24px;letter-spacing:.05em;">SHOP</div>
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 11px;border-radius:999px;background:rgba(184,146,42,.1);border:1px solid rgba(184,146,42,.4);">
+              <span style="width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#E4C15A,#B8922A);"></span>
+              <span style="font-family:'Space Mono',monospace;font-size:12px;color:#E4C15A;font-weight:700;">45,320</span>
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <div style="padding:16px 24px 0;display:flex;gap:8px;">
+            <div style="flex:1;text-align:center;padding:9px 0;border-radius:10px;font-family:'Space Mono',monospace;font-size:11px;color:#8a97a8;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);">COSMETICS</div>
+            <div style="flex:1;text-align:center;padding:9px 0;border-radius:10px;font-family:'Space Mono',monospace;font-size:11px;color:#04191c;background:#00C2C7;font-weight:700;">CONSUMABLES</div>
+            <div style="flex:1;text-align:center;padding:9px 0;border-radius:10px;font-family:'Space Mono',monospace;font-size:11px;color:#E4C15A;background:rgba(184,146,42,.1);border:1px solid rgba(184,146,42,.35);">PASS</div>
+          </div>
+
+          <!-- Ritual card -->
+          <div style="margin:16px 24px 0;padding:14px;border-radius:16px;background:linear-gradient(160deg,#141d2b,#0c131d);border:1px solid rgba(0,194,199,.22);display:flex;gap:13px;align-items:center;">
+            <div style="width:54px;height:54px;border-radius:12px;background:repeating-linear-gradient(45deg,#0f1826,#0f1826 6px,#0c141f 6px,#0c141f 12px);border:1px dashed rgba(0,194,199,.4);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:7px;color:#5f7183;text-align:center;">RITUAL<br>ICON</div>
+            <div style="flex:1;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div style="font-family:'Cinzel',serif;font-weight:700;font-size:15px;color:#F4F6F8;">Basic Ritual</div>
+                <div style="font-family:'Space Mono',monospace;font-size:9px;color:#6c7c8f;">OWNED · 3</div>
+              </div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:11px;color:#8a97a8;margin:3px 0 8px;">+50% Resonance this run · 1-use</div>
+              <button style="all:unset;cursor:pointer;display:inline-block;padding:7px 18px;border-radius:9px;background:rgba(0,194,199,.14);border:1px solid rgba(0,194,199,.5);font-family:'Space Mono',monospace;font-size:11px;color:#8fd8da;font-weight:700;">BUY · 500 <span style="color:#E4C15A;">RP</span></button>
+            </div>
+          </div>
+
+          <!-- Convenience Pass -->
+          <div style="margin:16px 24px 0;padding:16px;border-radius:16px;background:linear-gradient(150deg,rgba(184,146,42,.18),rgba(13,110,122,.14));border:1px solid rgba(184,146,42,.5);position:relative;overflow:hidden;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.16em;color:#E4C15A;">SUBSCRIPTION</div>
+                <div style="font-family:'Cinzel',serif;font-weight:700;font-size:18px;color:#F4F6F8;">Convenience Pass</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-family:'Space Mono',monospace;font-size:18px;color:#E4C15A;font-weight:700;">$9.99</div>
+                <div style="font-family:'Space Mono',monospace;font-size:9px;color:#8a7a3f;">/ MONTH</div>
+              </div>
+            </div>
+            <div style="margin:12px 0;display:flex;flex-direction:column;gap:6px;">
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#d9e0e8;">✦ Remove all rewarded ads</div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#d9e0e8;">✦ +50% offline Resonance</div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#d9e0e8;">✦ 1 free retry per campaign</div>
+            </div>
+            <button style="all:unset;cursor:pointer;display:block;text-align:center;padding:13px;border-radius:12px;background:linear-gradient(135deg,#B8922A,#E4C15A);font-family:'Cinzel',serif;font-weight:700;font-size:15px;letter-spacing:.06em;color:#241a05;box-shadow:0 0 22px rgba(184,146,42,.5);">SUBSCRIBE</button>
+          </div>
+
+          <!-- Watch ad row -->
+          <div style="position:absolute;left:24px;right:24px;bottom:26px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#F4F6F8;font-weight:600;">Watch ad → 3× offline</div>
+              <div style="font-family:'Space Mono',monospace;font-size:9px;color:#6c7c8f;">2 / 3 today</div>
+            </div>
+            <div style="padding:8px 14px;border-radius:9px;background:rgba(0,194,199,.12);border:1px solid rgba(0,194,199,.4);font-family:'Space Mono',monospace;font-size:11px;color:#8fd8da;">▶ WATCH</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 07 IDLE / OFFLINE ================= -->
+    <div data-screen-label="07 Idle Offline" style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.24em;color:#00C2C7;text-transform:uppercase;padding:5px 14px;border:1px solid rgba(0,194,199,.3);border-radius:999px;">07 · IDLE / OFFLINE</div>
+      <div style="width:344px;padding:12px;border-radius:46px;background:#05070a;border:1px solid #1c2735;box-shadow:0 40px 90px -24px rgba(0,0,0,.9), inset 0 0 0 2px #0e141d;">
+        <div style="position:relative;width:320px;height:660px;border-radius:36px;overflow:hidden;background:radial-gradient(120% 70% at 50% 24%, #16233a 0%, #0c1420 55%, #070b10 100%);">
+          <div style="height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-family:'Space Mono',monospace;font-size:12px;color:#cdd6e2;"><span>9:41</span><span style="display:flex;gap:5px;align-items:center;"><span style="width:16px;height:9px;border:1px solid #cdd6e2;border-radius:2px;"></span><span style="width:15px;height:9px;background:#cdd6e2;border-radius:2px;"></span></span></div>
+
+          <div style="text-align:center;padding:16px 24px 0;">
+            <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:.4em;color:#B8922A;">THE PALE CHORUS WAITS</div>
+          </div>
+
+          <!-- Corvus portrait, real art -->
+          <div style="margin:20px auto 0;width:150px;height:150px;border-radius:20px;overflow:hidden;background:#0c1420;border:1px solid rgba(0,194,199,.5);box-shadow:0 0 34px rgba(0,194,199,.4);position:relative;animation:cpDrift 6s ease-in-out infinite;">
+            <img src="assets/cast/corvus_threeq_l.png" alt="Corvus" style="width:100%;height:100%;object-fit:cover;object-position:50% 20%;">
+          </div>
+          <div style="text-align:center;font-family:'Space Grotesk',sans-serif;font-style:italic;font-size:12px;color:#a9bccc;margin-top:14px;padding:0 30px;">“The Pale Chorus always waits.”</div>
+
+          <!-- Offline earned -->
+          <div style="margin:20px 24px 0;padding:18px;border-radius:18px;background:linear-gradient(160deg,rgba(184,146,42,.16),rgba(13,110,122,.1));border:1px solid rgba(184,146,42,.42);text-align:center;">
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.16em;color:#8a7a3f;">OFFLINE RESONANCE EARNED</div>
+            <div style="font-family:'Space Mono',monospace;font-size:38px;font-weight:700;color:#E4C15A;text-shadow:0 0 22px rgba(184,146,42,.5);margin:4px 0;">24,000</div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:11px;color:#8a97a8;">The Tonal Engine has been working…</div>
+            <div style="height:5px;border-radius:999px;background:#1a212b;margin-top:12px;overflow:hidden;"><div style="height:100%;width:60%;background:linear-gradient(90deg,#B8922A,#E4C15A);border-radius:999px;"></div></div>
+            <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:#6c7c8f;margin-top:6px;"><span>4.8h / 8h cap</span><span>LAST: WAVE 12/15</span></div>
+          </div>
+
+          <div style="position:absolute;left:24px;right:24px;bottom:84px;display:flex;gap:12px;">
+            <button style="all:unset;cursor:pointer;flex:1.5;text-align:center;padding:15px;border-radius:14px;background:linear-gradient(135deg,#0D6E7A,#00C2C7);font-family:'Cinzel',serif;font-weight:700;font-size:15px;letter-spacing:.05em;color:#04191c;box-shadow:0 0 24px rgba(0,194,199,.4);">CLAIM & RESUME</button>
+            <button style="all:unset;cursor:pointer;flex:1;text-align:center;padding:15px;border-radius:14px;background:rgba(107,79,160,.16);border:1px solid rgba(107,79,160,.5);font-family:'Cinzel',serif;font-weight:600;font-size:14px;color:#c3b2e6;">PRESTIGE</button>
+          </div>
+
+          <div style="position:absolute;left:24px;right:24px;bottom:26px;display:flex;gap:10px;">
+            <div style="flex:1;text-align:center;padding:10px;border-radius:11px;background:rgba(0,194,199,.08);border:1px solid rgba(0,194,199,.3);font-family:'Space Mono',monospace;font-size:10px;color:#8fd8da;">▶ AD → 2× REWARD</div>
+            <div style="flex:1;text-align:center;padding:10px;border-radius:11px;background:rgba(184,146,42,.1);border:1px solid rgba(184,146,42,.35);font-family:'Space Mono',monospace;font-size:10px;color:#E4C15A;">PASS · $9.99/mo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 08 SETTINGS ================= -->
+    <div data-screen-label="08 Settings" style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.24em;color:#00C2C7;text-transform:uppercase;padding:5px 14px;border:1px solid rgba(0,194,199,.3);border-radius:999px;">08 · SETTINGS</div>
+      <div style="width:344px;padding:12px;border-radius:46px;background:#05070a;border:1px solid #1c2735;box-shadow:0 40px 90px -24px rgba(0,0,0,.9), inset 0 0 0 2px #0e141d;">
+        <div style="position:relative;width:320px;height:660px;border-radius:36px;overflow:hidden;background:radial-gradient(120% 70% at 50% 0%, #14202f 0%, #0b131d 50%, #070b10 100%);">
+          <div style="height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-family:'Space Mono',monospace;font-size:12px;color:#cdd6e2;"><span>9:41</span><span style="display:flex;gap:5px;align-items:center;"><span style="width:16px;height:9px;border:1px solid #cdd6e2;border-radius:2px;"></span><span style="width:15px;height:9px;background:#cdd6e2;border-radius:2px;"></span></span></div>
+
+          <div style="padding:18px 24px 0;font-family:'Cinzel',serif;font-weight:700;font-size:24px;letter-spacing:.05em;">SETTINGS</div>
+
+          <!-- AUDIO -->
+          <div style="padding:18px 24px 0;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;color:#6c7c8f;">AUDIO</div>
+          <div style="margin:10px 24px 0;border-radius:14px;background:linear-gradient(160deg,#141d2b,#0c131d);border:1px solid rgba(255,255,255,.07);overflow:hidden;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.05);">
+              <span style="font-family:'Space Grotesk',sans-serif;font-size:13px;">Sound effects</span>
+              <div style="width:40px;height:23px;border-radius:999px;background:#0D6E7A;position:relative;box-shadow:0 0 12px rgba(0,194,199,.4);"><div style="position:absolute;top:2px;right:2px;width:19px;height:19px;border-radius:50%;background:#00C2C7;"></div></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
+              <span style="font-family:'Space Grotesk',sans-serif;font-size:13px;">Voice lines</span>
+              <div style="width:40px;height:23px;border-radius:999px;background:#0D6E7A;position:relative;box-shadow:0 0 12px rgba(0,194,199,.4);"><div style="position:absolute;top:2px;right:2px;width:19px;height:19px;border-radius:50%;background:#00C2C7;"></div></div>
+            </div>
+          </div>
+
+          <!-- DISPLAY -->
+          <div style="padding:18px 24px 0;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;color:#6c7c8f;">DISPLAY</div>
+          <div style="margin:10px 24px 0;border-radius:14px;background:linear-gradient(160deg,#141d2b,#0c131d);border:1px solid rgba(255,255,255,.07);overflow:hidden;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.05);">
+              <span style="font-family:'Space Grotesk',sans-serif;font-size:13px;">Graphics</span>
+              <div style="display:flex;gap:6px;"><span style="font-family:'Space Mono',monospace;font-size:10px;color:#8a97a8;padding:5px 11px;border-radius:8px;background:rgba(255,255,255,.04);">LOW</span><span style="font-family:'Space Mono',monospace;font-size:10px;color:#04191c;padding:5px 11px;border-radius:8px;background:#00C2C7;font-weight:700;">HIGH</span></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
+              <span style="font-family:'Space Grotesk',sans-serif;font-size:13px;">Debug metrics</span>
+              <div style="width:40px;height:23px;border-radius:999px;background:rgba(255,255,255,.1);position:relative;"><div style="position:absolute;top:2px;left:2px;width:19px;height:19px;border-radius:50%;background:#6c7c8f;"></div></div>
+            </div>
+          </div>
+
+          <!-- ACCOUNT -->
+          <div style="padding:18px 24px 0;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;color:#6c7c8f;">ACCOUNT</div>
+          <div style="margin:10px 24px 0;padding:14px 16px;border-radius:14px;background:linear-gradient(160deg,#141d2b,#0c131d);border:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;">Epoch 3 · 3.375×</div>
+              <div style="font-family:'Space Mono',monospace;font-size:9px;color:#6c7c8f;">Signed in · guest</div>
+            </div>
+            <div style="font-family:'Space Mono',monospace;font-size:11px;color:#8fd8da;padding:6px 12px;border-radius:8px;border:1px solid rgba(0,194,199,.35);">SIGN IN</div>
+          </div>
+
+          <div style="position:absolute;left:24px;right:24px;bottom:44px;">
+            <button style="all:unset;cursor:pointer;display:block;text-align:center;padding:13px;border-radius:12px;background:rgba(190,70,70,.1);border:1px solid rgba(190,70,70,.45);font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;color:#e08a8a;">RESET ACCOUNT</button>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:18px;text-align:center;font-family:'Space Mono',monospace;font-size:9px;color:#3f4c5c;letter-spacing:.16em;">CORVUS PROTOCOL · v0.1.0 MVP</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 09 THE ROOKERY ================= -->
+    <div data-screen-label="09 The Rookery" style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.24em;color:#B8922A;text-transform:uppercase;padding:5px 14px;border:1px solid rgba(184,146,42,.4);border-radius:999px;background:rgba(184,146,42,.08);">09 · THE ROOKERY (roster hub)</div>
+      <div style="width:344px;padding:12px;border-radius:46px;background:#05070a;border:1px solid #1c2735;box-shadow:0 40px 90px -24px rgba(0,0,0,.9), inset 0 0 0 2px #0e141d;">
+        <div style="position:relative;width:320px;height:660px;border-radius:36px;overflow:hidden;background:radial-gradient(120% 60% at 50% 0%, #16233a 0%, #0c1420 55%, #070b10 100%);">
+          <div style="height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-family:'Space Mono',monospace;font-size:12px;color:#cdd6e2;"><span>9:41</span><span style="display:flex;gap:5px;align-items:center;"><span style="width:16px;height:9px;border:1px solid #cdd6e2;border-radius:2px;"></span><span style="width:15px;height:9px;background:#cdd6e2;border-radius:2px;"></span></span></div>
+
+          <div style="text-align:center;padding:14px 24px 0;">
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.3em;color:#6c7c8f;">CORVUS PROTOCOL</div>
+            <h2 style="font-family:'Cinzel',serif;font-weight:800;font-size:26px;letter-spacing:.05em;margin:6px 0 2px;text-shadow:0 0 26px rgba(184,146,42,.3);">THE ROOKERY</h2>
+            <div style="font-family:'Space Grotesk',sans-serif;font-style:italic;font-size:11px;color:#8a97a8;">Your Murder awaits the next rite.</div>
+          </div>
+
+          <!-- Perch row -->
+          <div style="position:relative;margin:18px 18px 0;padding:16px 8px 12px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);">
+            <div style="position:absolute;left:14px;right:14px;bottom:18px;height:10px;border-radius:4px;background:linear-gradient(180deg,#2a1d12,#160f09);box-shadow:0 4px 10px rgba(0,0,0,.5);"></div>
+            <div style="position:relative;display:flex;justify-content:space-between;align-items:flex-end;padding:0 4px;">
+              <div style="text-align:center;">
+                <div style="width:54px;height:54px;border-radius:50%;overflow:hidden;border:2px solid #00C2C7;box-shadow:0 0 16px rgba(0,194,199,.6);margin:0 auto 6px;"><img src="assets/cast/corvus_front.png" alt="Corvus" style="width:100%;height:100%;object-fit:cover;object-position:50% 28%;"></div>
+                <div style="font-family:'Space Mono',monospace;font-size:8px;color:#8fd8da;letter-spacing:.04em;">CORVUS</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="width:46px;height:46px;border-radius:50%;overflow:hidden;border:2px solid #6B4FA0;box-shadow:0 0 14px rgba(107,79,160,.55);margin:0 auto 6px;"><img src="assets/cast/sage_front.png" alt="Sage" style="width:100%;height:100%;object-fit:cover;object-position:50% 28%;"></div>
+                <div style="font-family:'Space Mono',monospace;font-size:8px;color:#c3b2e6;letter-spacing:.04em;">SAGE</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="width:44px;height:44px;border-radius:50%;overflow:hidden;border:2px solid #3ecf6e;box-shadow:0 0 14px rgba(62,207,110,.5);margin:0 auto 6px;"><img src="assets/cast/pip_front.png" alt="Pip" style="width:100%;height:100%;object-fit:cover;object-position:50% 38%;"></div>
+                <div style="font-family:'Space Mono',monospace;font-size:8px;color:#9be6b3;letter-spacing:.04em;">PIP</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="width:46px;height:46px;border-radius:50%;overflow:hidden;border:2px solid #B8922A;box-shadow:0 0 14px rgba(184,146,42,.5);margin:0 auto 6px;"><img src="assets/cast/mira_front.png" alt="Mira" style="width:100%;height:100%;object-fit:cover;object-position:50% 28%;"></div>
+                <div style="font-family:'Space Mono',monospace;font-size:8px;color:#E4C15A;letter-spacing:.04em;">MIRA</div>
+              </div>
+              <div style="text-align:center;position:relative;">
+                <div style="position:absolute;top:-10px;right:-2px;font-family:'Space Mono',monospace;font-size:6px;letter-spacing:.06em;color:#04191c;background:#E4C15A;padding:1px 4px;border-radius:999px;">NEW</div>
+                <div style="width:44px;height:44px;border-radius:50%;overflow:hidden;border:2px solid #c05a3f;box-shadow:0 0 14px rgba(192,90,63,.5);margin:0 auto 6px;filter:saturate(.7);opacity:.55;"><img src="assets/cast/rosa_front.png" alt="Rosa" style="width:100%;height:100%;object-fit:cover;object-position:50% 15%;"></div>
+                <div style="font-family:'Space Mono',monospace;font-size:8px;color:#e0987f;letter-spacing:.04em;">ROSA</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Selected character detail: Corvus -->
+          <div style="margin:16px 18px 0;padding:16px;border-radius:20px;background:linear-gradient(160deg,#101c2c,#0a121c);border:1px solid rgba(0,194,199,.35);box-shadow:0 0 30px rgba(0,194,199,.12);">
+            <div style="display:flex;gap:14px;align-items:center;">
+              <div style="width:76px;height:76px;border-radius:16px;overflow:hidden;border:1px solid rgba(0,194,199,.5);box-shadow:0 0 18px rgba(0,194,199,.4);flex-shrink:0;"><img src="assets/cast/corvus_threeq_l.png" alt="Corvus" style="width:100%;height:100%;object-fit:cover;object-position:50% 15%;"></div>
+              <div>
+                <div style="font-family:'Cinzel',serif;font-weight:700;font-size:19px;color:#F4F6F8;">CORVUS</div>
+                <div style="font-family:'Space Mono',monospace;font-size:10px;color:#00C2C7;letter-spacing:.06em;">CHAOS · CROWD CONTROL</div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:6px;">
+                  <div style="font-family:'Space Mono',monospace;font-size:10px;color:#8a97a8;">L45</div>
+                  <div style="flex:1;height:4px;border-radius:2px;background:#0d2226;"><div style="height:100%;width:70%;background:#00C2C7;border-radius:2px;"></div></div>
+                </div>
+              </div>
+            </div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#a9bccc;margin-top:12px;">Taunt aura draws enemy fire; crits chain chaos through the flock.</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;">
+              <div style="text-align:center;padding:8px 4px;border-radius:10px;background:rgba(255,255,255,.03);">
+                <div style="font-family:'Space Mono',monospace;font-size:8px;color:#6c7c8f;">DPS</div>
+                <div style="font-family:'Space Mono',monospace;font-size:14px;color:#F4F6F8;font-weight:700;">15</div>
+              </div>
+              <div style="text-align:center;padding:8px 4px;border-radius:10px;background:rgba(255,255,255,.03);">
+                <div style="font-family:'Space Mono',monospace;font-size:8px;color:#6c7c8f;">RANGE</div>
+                <div style="font-family:'Space Mono',monospace;font-size:14px;color:#F4F6F8;font-weight:700;">200</div>
+              </div>
+              <div style="text-align:center;padding:8px 4px;border-radius:10px;background:rgba(255,255,255,.03);">
+                <div style="font-family:'Space Mono',monospace;font-size:8px;color:#6c7c8f;">CRIT</div>
+                <div style="font-family:'Space Mono',monospace;font-size:14px;color:#F4F6F8;font-weight:700;">15%</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="position:absolute;left:24px;right:24px;bottom:30px;">
+            <button style="all:unset;cursor:pointer;display:block;text-align:center;padding:15px;border-radius:14px;background:linear-gradient(135deg,#0D6E7A,#00C2C7);font-family:'Cinzel',serif;font-weight:700;font-size:16px;letter-spacing:.08em;color:#04191c;box-shadow:0 0 24px rgba(0,194,199,.4);">EQUIP CORVUS</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 10 THE BOARD ================= -->
+    <div data-screen-label="10 The Board" style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.24em;color:#00C2C7;text-transform:uppercase;padding:5px 14px;border:1px solid rgba(0,194,199,.3);border-radius:999px;">10 · THE BOARD (game board, hero view)</div>
+      <div style="width:344px;padding:12px;border-radius:46px;background:#05070a;border:1px solid #1c2735;box-shadow:0 40px 90px -24px rgba(0,0,0,.9), inset 0 0 0 2px #0e141d;">
+        <div style="position:relative;width:320px;height:660px;border-radius:36px;overflow:hidden;background:radial-gradient(120% 60% at 50% 30%, #16233a 0%, #0c1420 55%, #070b10 100%);">
+          <div style="height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-family:'Space Mono',monospace;font-size:12px;color:#cdd6e2;"><span>9:41</span><span style="display:flex;gap:5px;align-items:center;"><span style="width:16px;height:9px;border:1px solid #cdd6e2;border-radius:2px;"></span><span style="width:15px;height:9px;background:#cdd6e2;border-radius:2px;"></span></span></div>
+
+          <div style="padding:8px 16px 0;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-family:'Cinzel',serif;font-weight:700;font-size:15px;">WAVE 9 <span style="color:#6c7c8f;font-size:11px;font-weight:500;">/ 15</span></div>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#c9a5e0;letter-spacing:.1em;margin-top:2px;">⚠ AFFIX: SWARM — spawn rate +30%</div>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <div style="display:flex;align-items:center;gap:5px;padding:5px 9px;border-radius:999px;background:rgba(184,146,42,.1);border:1px solid rgba(184,146,42,.35);"><span style="width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#E4C15A,#B8922A);"></span><span style="font-family:'Space Mono',monospace;font-size:11px;color:#E4C15A;font-weight:700;">45.3K</span></div>
+              <div style="display:flex;align-items:center;gap:5px;padding:5px 9px;border-radius:999px;background:rgba(0,194,199,.1);border:1px solid rgba(0,194,199,.35);"><span style="display:inline-block;width:10px;height:10px;background:linear-gradient(135deg,#00C2C7,#B8922A);transform:rotate(45deg);border-radius:2px;"></span><span style="font-family:'Space Mono',monospace;font-size:11px;color:#8fd8da;font-weight:700;">128</span></div>
+            </div>
+          </div>
+
+          <!-- Isometric board — "The Hollow Roots" (Norse / Underland / Underdark / Castlevania) -->
+          <div style="position:relative;margin:14px 14px 0;height:420px;border-radius:18px;overflow:hidden;background:radial-gradient(130% 100% at 50% -10%,#1c2840 0%,#0d1622 45%,#05070a 100%);display:flex;align-items:center;justify-content:center;">
+            <!-- cavern ceiling void -->
+            <div style="position:absolute;inset:0;background:linear-gradient(180deg,#020304 0%, transparent 30%);"></div>
+            <!-- shattered gothic arch, back wall -->
+            <div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);width:210px;height:160px;border:10px solid #0a1018;border-bottom:none;border-radius:105px 105px 0 0;opacity:.9;"></div>
+            <div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);width:190px;height:145px;border:2px solid rgba(0,194,199,.12);border-bottom:none;border-radius:95px 95px 0 0;"></div>
+            <!-- twisted dead-tree roots breaking through corners -->
+            <div style="position:absolute;left:-14px;top:-10px;width:90px;height:140px;background:#060a10;clip-path:polygon(0% 0%,55% 0%,80% 20%,60% 38%,85% 55%,55% 75%,70% 100%,0% 100%);opacity:.95;"></div>
+            <div style="position:absolute;right:-16px;top:-6px;width:80px;height:120px;background:#060a10;clip-path:polygon(100% 0%,45% 0%,20% 22%,42% 40%,15% 58%,48% 78%,30% 100%,100% 100%);opacity:.9;"></div>
+            <!-- rune-carved standing stones, foreground silhouette -->
+            <div style="position:absolute;left:6px;bottom:0;width:15px;height:64px;background:linear-gradient(180deg,#1c2738,#0c121c);clip-path:polygon(18% 0,82% 0,100% 100%,0% 100%);opacity:.85;"></div>
+            <div style="position:absolute;left:6px;bottom:30px;width:15px;height:3px;background:rgba(0,194,199,.5);box-shadow:0 0 6px rgba(0,194,199,.6);"></div>
+            <div style="position:absolute;right:8px;bottom:0;width:13px;height:50px;background:linear-gradient(180deg,#1c2738,#0c121c);clip-path:polygon(18% 0,82% 0,100% 100%,0% 100%);opacity:.8;"></div>
+            <div style="position:absolute;right:8px;bottom:22px;width:13px;height:3px;background:rgba(107,79,160,.55);box-shadow:0 0 6px rgba(107,79,160,.6);"></div>
+            <!-- oversized bioluminescent fungus (Underland scale distortion) -->
+            <div style="position:absolute;left:18px;bottom:-6px;width:30px;height:18px;border-radius:50% 50% 10% 10%;background:radial-gradient(circle at 40% 30%,rgba(0,194,199,.55),rgba(0,194,199,.1) 70%);box-shadow:0 0 22px rgba(0,194,199,.5);"></div>
+            <div style="position:absolute;left:26px;bottom:-6px;width:5px;height:14px;background:#0f1a22;"></div>
+            <div style="position:absolute;right:22px;bottom:2px;width:20px;height:12px;border-radius:50% 50% 10% 10%;background:radial-gradient(circle at 40% 30%,rgba(107,79,160,.55),rgba(107,79,160,.1) 70%);box-shadow:0 0 18px rgba(107,79,160,.5);"></div>
+            <div style="position:absolute;right:27px;bottom:2px;width:4px;height:10px;background:#0f1a22;"></div>
+            <!-- drifting rune motes -->
+            <div style="position:absolute;top:22%;left:16%;width:3px;height:3px;border-radius:50%;background:#00C2C7;box-shadow:0 0 8px #00C2C7;animation:cpDrift 5s ease-in-out infinite;"></div>
+            <div style="position:absolute;top:34%;right:20%;width:3px;height:3px;border-radius:50%;background:#B8922A;box-shadow:0 0 8px #B8922A;animation:cpDrift 7s ease-in-out infinite;"></div>
+            <div style="position:absolute;top:14%;right:38%;width:2px;height:2px;border-radius:50%;background:#c3b2e6;box-shadow:0 0 6px #c3b2e6;animation:cpDrift 6s ease-in-out infinite;"></div>
+            <!-- black water sheen at base -->
+            <div style="position:absolute;left:0;right:0;bottom:0;height:26px;background:linear-gradient(180deg,transparent,rgba(0,194,199,.06));"></div>
+            <div style="position:absolute;inset:0;background:radial-gradient(55% 35% at 68% 82%, rgba(107,79,160,.2), transparent);"></div>
+            <div style="position:absolute;top:12px;left:14px;font-family:'Space Mono',monospace;font-size:8px;color:#5f7183;letter-spacing:.1em;">SUMMONING CIRCLE — THE HOLLOW ROOTS</div>
+
+            <div style="perspective:1000px;">
+              <div style="transform-style:preserve-3d;transform:rotateX(55deg) rotateZ(45deg);display:grid;grid-template-columns:repeat(6,38px);grid-template-rows:repeat(4,38px);gap:3px;">
+                <!-- ground tiles -->
+                <div style="grid-column:3;grid-row:1;background:#101a28;border:1px solid rgba(255,255,255,.05);border-radius:4px;"></div>
+                <div style="grid-column:4;grid-row:1;background:#101a28;border:1px solid rgba(255,255,255,.05);border-radius:4px;"></div>
+                <div style="grid-column:5;grid-row:1;background:#101a28;border:1px solid rgba(255,255,255,.05);border-radius:4px;"></div>
+                <div style="grid-column:6;grid-row:1;background:#101a28;border:1px solid rgba(255,255,255,.05);border-radius:4px;"></div>
+                <div style="grid-column:1;grid-row:2;background:#101a28;border:1px solid rgba(255,255,255,.05);border-radius:4px;"></div>
+                <div style="grid-column:5;grid-row:2;background:#101a28;border:1px solid rgba(255,255,255,.05);border-radius:4px;"></div>
+                <div style="grid-column:6;grid-row:2;background:#101a28;border:1px solid rgba(255,255,255,.05);border-radius:4px;"></div>
+                <div style="grid-column:1;grid-row:3;background:#101a28;border:1px solid rgba(255,255,255,.05);border-radius:4px;"></div>
+                <div style="grid-column:2;grid-row:3;background:#101a28;border:1px solid rgba(255,255,255,.05);border-radius:4px;"></div>
+                <div style="grid-column:3;grid-row:3;background:#101a28;border:1px solid rgba(255,255,255,.05);border-radius:4px;"></div>
+                <div style="grid-column:1;grid-row:4;background:#101a28;border:1px solid rgba(255,255,255,.05);border-radius:4px;"></div>
+                <div style="grid-column:2;grid-row:4;background:#101a28;border:1px solid rgba(255,255,255,.05);border-radius:4px;"></div>
+                <div style="grid-column:3;grid-row:4;background:#101a28;border:1px solid rgba(255,255,255,.05);border-radius:4px;"></div>
+                <div style="grid-column:4;grid-row:4;background:#101a28;border:1px solid rgba(255,255,255,.05);border-radius:4px;"></div>
+                <div style="grid-column:5;grid-row:4;background:#101a28;border:1px solid rgba(255,255,255,.05);border-radius:4px;"></div>
+                <!-- path tiles -->
+                <div style="grid-column:1;grid-row:1;background:linear-gradient(160deg,#123036,#0c1f22);border:1px solid rgba(0,194,199,.4);box-shadow:inset 0 0 8px rgba(0,194,199,.3);border-radius:4px;"></div>
+                <div style="grid-column:2;grid-row:1;background:linear-gradient(160deg,#123036,#0c1f22);border:1px solid rgba(0,194,199,.4);box-shadow:inset 0 0 8px rgba(0,194,199,.3);border-radius:4px;"></div>
+                <div style="grid-column:2;grid-row:2;background:linear-gradient(160deg,#123036,#0c1f22);border:1px solid rgba(0,194,199,.4);box-shadow:inset 0 0 8px rgba(0,194,199,.3);border-radius:4px;"></div>
+                <div style="grid-column:3;grid-row:2;background:linear-gradient(160deg,#123036,#0c1f22);border:1px solid rgba(0,194,199,.4);box-shadow:inset 0 0 8px rgba(0,194,199,.3);border-radius:4px;"></div>
+                <div style="grid-column:4;grid-row:2;background:linear-gradient(160deg,#123036,#0c1f22);border:1px solid rgba(0,194,199,.4);box-shadow:inset 0 0 8px rgba(0,194,199,.3);border-radius:4px;"></div>
+                <div style="grid-column:4;grid-row:3;background:linear-gradient(160deg,#123036,#0c1f22);border:1px solid rgba(0,194,199,.4);box-shadow:inset 0 0 8px rgba(0,194,199,.3);border-radius:4px;"></div>
+                <div style="grid-column:5;grid-row:3;background:linear-gradient(160deg,#123036,#0c1f22);border:1px solid rgba(0,194,199,.4);box-shadow:inset 0 0 8px rgba(0,194,199,.3);border-radius:4px;"></div>
+                <div style="grid-column:6;grid-row:3;background:linear-gradient(160deg,#123036,#0c1f22);border:1px solid rgba(0,194,199,.4);box-shadow:inset 0 0 8px rgba(0,194,199,.3);border-radius:4px;"></div>
+                <!-- altar -->
+                <div style="grid-column:6;grid-row:4;background:radial-gradient(circle,#3a2350,#160f22);border:1px solid rgba(107,79,160,.8);box-shadow:0 0 16px rgba(107,79,160,.7);border-radius:6px;"></div>
+
+                <!-- towers -->
+                <div style="grid-column:3;grid-row:1;display:flex;align-items:center;justify-content:center;z-index:5;">
+                  <div style="transform:rotateZ(-45deg) rotateX(-55deg);width:26px;height:26px;border-radius:50%;overflow:hidden;border:2px solid #00C2C7;box-shadow:0 0 10px rgba(0,194,199,.8);"><img src="assets/cast/corvus_front.png" alt="Corvus" style="width:100%;height:100%;object-fit:cover;object-position:50% 30%;"></div>
+                </div>
+                <div style="grid-column:1;grid-row:3;display:flex;align-items:center;justify-content:center;z-index:5;">
+                  <div style="transform:rotateZ(-45deg) rotateX(-55deg);width:24px;height:24px;border-radius:50%;overflow:hidden;border:2px solid #6B4FA0;box-shadow:0 0 10px rgba(107,79,160,.8);"><img src="assets/cast/sage_front.png" alt="Sage" style="width:100%;height:100%;object-fit:cover;object-position:50% 30%;"></div>
+                </div>
+                <div style="grid-column:5;grid-row:4;display:flex;align-items:center;justify-content:center;z-index:5;">
+                  <div style="transform:rotateZ(-45deg) rotateX(-55deg);width:22px;height:22px;border-radius:50%;overflow:hidden;border:2px solid #3ecf6e;box-shadow:0 0 10px rgba(62,207,110,.8);"><img src="assets/cast/pip_front.png" alt="Pip" style="width:100%;height:100%;object-fit:cover;object-position:50% 40%;"></div>
+                </div>
+
+                <!-- enemies (Pale Chorus) -->
+                <div style="grid-column:2;grid-row:1;display:flex;align-items:center;justify-content:center;z-index:4;">
+                  <div style="transform:rotateZ(-45deg) rotateX(-55deg);width:15px;height:19px;border-radius:50% 50% 40% 40%;background:rgba(190,205,225,.55);border:1px solid rgba(190,205,225,.8);box-shadow:0 0 7px rgba(190,205,225,.6);"></div>
+                </div>
+                <div style="grid-column:3;grid-row:2;display:flex;align-items:center;justify-content:center;z-index:4;">
+                  <div style="transform:rotateZ(-45deg) rotateX(-55deg);width:16px;height:20px;border-radius:50% 50% 40% 40%;background:rgba(175,195,120,.55);border:1px solid rgba(175,195,120,.8);box-shadow:0 0 7px rgba(175,195,120,.6);"></div>
+                </div>
+                <div style="grid-column:4;grid-row:3;display:flex;align-items:center;justify-content:center;z-index:4;">
+                  <div style="transform:rotateZ(-45deg) rotateX(-55deg);width:21px;height:24px;border-radius:50% 50% 35% 35%;background:rgba(120,110,130,.6);border:1px solid rgba(150,120,180,.6);box-shadow:0 0 8px rgba(150,120,180,.5);"></div>
+                </div>
+                <div style="grid-column:6;grid-row:3;display:flex;align-items:center;justify-content:center;z-index:6;">
+                  <div style="transform:rotateZ(-45deg) rotateX(-55deg);width:30px;height:34px;border-radius:50% 50% 35% 35%;background:#0c0a12;border:1px solid rgba(255,255,255,.5);box-shadow:0 0 20px rgba(200,180,230,.7), inset 0 0 10px rgba(255,255,255,.2);"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="position:absolute;left:0;right:0;bottom:20px;padding:0 14px;display:flex;gap:8px;">
+            <div style="flex:1;text-align:center;padding:10px;border-radius:12px;background:rgba(0,194,199,.1);border:1px solid rgba(0,194,199,.3);color:#8fd8da;font-size:13px;">❚❚</div>
+            <div style="flex:1;text-align:center;padding:10px;border-radius:12px;background:rgba(184,146,42,.12);border:1px solid rgba(184,146,42,.4);font-family:'Space Mono',monospace;font-size:12px;color:#E4C15A;font-weight:700;">2× SPEED</div>
+            <div style="flex:1;text-align:center;padding:10px;border-radius:12px;background:rgba(107,79,160,.14);border:1px solid rgba(107,79,160,.4);font-family:'Space Mono',monospace;font-size:12px;color:#c3b2e6;">TOWERS ▾</div>
+          </div>
+        </div>
+      </div>
+      <div style="width:320px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);font-family:'Space Mono',monospace;font-size:9px;color:#8a97a8;display:flex;flex-wrap:wrap;gap:10px;">
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;border-radius:2px;background:linear-gradient(160deg,#123036,#0c1f22);border:1px solid rgba(0,194,199,.6);"></span>Path</span>
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;border-radius:2px;background:#101a28;border:1px solid rgba(255,255,255,.2);"></span>Buildable</span>
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;border-radius:2px;background:radial-gradient(circle,#3a2350,#160f22);border:1px solid rgba(107,79,160,.8);"></span>Altar</span>
+        <span style="color:#5f7183;">Wave affixes randomize spawn order/rate each run — see research notes.</span>
+      </div>
+    </div>
+
+    <!-- ================= 11 THE PALE CHORUS ================= -->
+    <div data-screen-label="11 The Pale Chorus" style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.24em;color:#00C2C7;text-transform:uppercase;padding:5px 14px;border:1px solid rgba(0,194,199,.3);border-radius:999px;">11 · THE PALE CHORUS (bestiary)</div>
+      <div style="width:344px;padding:12px;border-radius:46px;background:#05070a;border:1px solid #1c2735;box-shadow:0 40px 90px -24px rgba(0,0,0,.9), inset 0 0 0 2px #0e141d;">
+        <div style="position:relative;width:320px;height:660px;border-radius:36px;overflow:hidden;background:radial-gradient(120% 70% at 50% 0%, #14202f 0%, #0b131d 50%, #070b10 100%);">
+          <div style="height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-family:'Space Mono',monospace;font-size:12px;color:#cdd6e2;"><span>9:41</span><span style="display:flex;gap:5px;align-items:center;"><span style="width:16px;height:9px;border:1px solid #cdd6e2;border-radius:2px;"></span><span style="width:15px;height:9px;background:#cdd6e2;border-radius:2px;"></span></span></div>
+
+          <div style="padding:16px 22px 0;">
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.3em;color:#6c7c8f;">ENEMY CODEX</div>
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:24px;letter-spacing:.04em;">THE PALE CHORUS</div>
+          </div>
+
+          <div style="padding:14px 18px 0;display:flex;flex-direction:column;gap:9px;">
+            <!-- Wisp -->
+            <div style="display:flex;gap:11px;align-items:center;padding:10px 12px;border-radius:14px;background:linear-gradient(160deg,#141d2b,#0c131d);border:1px solid rgba(190,205,225,.25);">
+              <div style="width:34px;height:40px;border-radius:50% 50% 40% 40%;background:rgba(190,205,225,.5);border:1px solid rgba(190,205,225,.8);box-shadow:0 0 10px rgba(190,205,225,.5);flex-shrink:0;"></div>
+              <div style="flex:1;">
+                <div style="display:flex;justify-content:space-between;"><span style="font-family:'Cinzel',serif;font-weight:700;font-size:14px;color:#F4F6F8;">Wisp</span><span style="font-family:'Space Mono',monospace;font-size:9px;color:#8a97a8;">FODDER</span></div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:10px;color:#8a97a8;margin-top:2px;">The first to break the silence.</div>
+                <div style="font-family:'Space Mono',monospace;font-size:9px;color:#6c7c8f;margin-top:4px;">HP 50 · SPD FAST</div>
+              </div>
+            </div>
+            <!-- Wailer -->
+            <div style="display:flex;gap:11px;align-items:center;padding:10px 12px;border-radius:14px;background:linear-gradient(160deg,#141d2b,#0c131d);border:1px solid rgba(175,195,120,.3);">
+              <div style="width:34px;height:40px;border-radius:50% 50% 40% 40%;background:rgba(175,195,120,.5);border:1px solid rgba(175,195,120,.8);box-shadow:0 0 10px rgba(175,195,120,.5);flex-shrink:0;"></div>
+              <div style="flex:1;">
+                <div style="display:flex;justify-content:space-between;"><span style="font-family:'Cinzel',serif;font-weight:700;font-size:14px;color:#F4F6F8;">Wailer</span><span style="font-family:'Space Mono',monospace;font-size:9px;color:#a6c17a;">DEBUFFER</span></div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:10px;color:#8a97a8;margin-top:2px;">Its cry dulls your towers' aim.</div>
+                <div style="font-family:'Space Mono',monospace;font-size:9px;color:#6c7c8f;margin-top:4px;">HP 90 · SPD SLOW · −10% tower accuracy nearby</div>
+              </div>
+            </div>
+            <!-- Shrieker -->
+            <div style="display:flex;gap:11px;align-items:center;padding:10px 12px;border-radius:14px;background:linear-gradient(160deg,#141d2b,#0c131d);border:1px solid rgba(220,120,170,.3);">
+              <div style="width:30px;height:34px;border-radius:50% 50% 40% 40%;background:rgba(220,120,170,.5);border:1px solid rgba(220,120,170,.8);box-shadow:0 0 10px rgba(220,120,170,.5);flex-shrink:0;"></div>
+              <div style="flex:1;">
+                <div style="display:flex;justify-content:space-between;"><span style="font-family:'Cinzel',serif;font-weight:700;font-size:14px;color:#F4F6F8;">Shrieker</span><span style="font-family:'Space Mono',monospace;font-size:9px;color:#e0a0c3;">SWARM</span></div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:10px;color:#8a97a8;margin-top:2px;">Comes in threes. Rarely alone.</div>
+                <div style="font-family:'Space Mono',monospace;font-size:9px;color:#6c7c8f;margin-top:4px;">HP 40 · SPD VERY FAST · spawns ×3</div>
+              </div>
+            </div>
+            <!-- Husk -->
+            <div style="display:flex;gap:11px;align-items:center;padding:10px 12px;border-radius:14px;background:linear-gradient(160deg,#141d2b,#0c131d);border:1px solid rgba(150,120,180,.3);">
+              <div style="width:38px;height:44px;border-radius:50% 50% 35% 35%;background:rgba(120,110,130,.6);border:1px solid rgba(150,120,180,.7);box-shadow:0 0 10px rgba(150,120,180,.5);flex-shrink:0;"></div>
+              <div style="flex:1;">
+                <div style="display:flex;justify-content:space-between;"><span style="font-family:'Cinzel',serif;font-weight:700;font-size:14px;color:#F4F6F8;">Husk</span><span style="font-family:'Space Mono',monospace;font-size:9px;color:#b39be0;">TANK</span></div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:10px;color:#8a97a8;margin-top:2px;">Armor of grief, worn like bone.</div>
+                <div style="font-family:'Space Mono',monospace;font-size:9px;color:#6c7c8f;margin-top:4px;">HP 220 · SPD SLOW · 20% damage reduction</div>
+              </div>
+            </div>
+            <!-- Boss -->
+            <div style="display:flex;gap:11px;align-items:center;padding:12px;border-radius:14px;background:linear-gradient(160deg,#1c1428,#100c18);border:1px solid rgba(255,255,255,.35);box-shadow:0 0 20px rgba(200,180,230,.2);">
+              <div style="width:42px;height:48px;border-radius:50% 50% 35% 35%;background:#0c0a12;border:1px solid rgba(255,255,255,.6);box-shadow:0 0 14px rgba(200,180,230,.7), inset 0 0 8px rgba(255,255,255,.2);flex-shrink:0;"></div>
+              <div style="flex:1;">
+                <div style="display:flex;justify-content:space-between;"><span style="font-family:'Cinzel',serif;font-weight:700;font-size:15px;color:#F4F6F8;">Whisper</span><span style="font-family:'Space Mono',monospace;font-size:9px;color:#E4C15A;">BOSS · WAVE 15</span></div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:10px;color:#a9bccc;margin-top:2px;">It does not walk. It arrives.</div>
+                <div style="font-family:'Space Mono',monospace;font-size:9px;color:#6c7c8f;margin-top:4px;">HP 1000 · P1 normal dmg · P2 (&lt;50%) −50% dmg taken, +speed</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 12 BONE-CAST ================= -->
+    <div data-screen-label="12a Bone-Cast — Odds" style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.24em;color:#B8922A;text-transform:uppercase;padding:5px 14px;border:1px solid rgba(184,146,42,.4);border-radius:999px;background:rgba(184,146,42,.08);">12a · BONE-CAST — pre-roll (variable reward)</div>
+      <div style="width:344px;padding:12px;border-radius:46px;background:#05070a;border:1px solid #1c2735;box-shadow:0 40px 90px -24px rgba(0,0,0,.9), inset 0 0 0 2px #0e141d;">
+        <div style="position:relative;width:320px;height:660px;border-radius:36px;overflow:hidden;background:radial-gradient(120% 70% at 50% 20%, #1a1430 0%, #0e0c1a 50%, #070810 100%);">
+          <div style="height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-family:'Space Mono',monospace;font-size:12px;color:#cdd6e2;position:relative;"><span>9:41</span><span style="display:flex;gap:5px;align-items:center;"><span style="width:16px;height:9px;border:1px solid #cdd6e2;border-radius:2px;"></span><span style="width:15px;height:9px;background:#cdd6e2;border-radius:2px;"></span></span></div>
+
+          <div style="position:relative;text-align:center;padding:14px 24px 0;">
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.3em;color:#8a7bb5;">THE CHORUS ANSWERS IN PATTERNS</div>
+            <h2 style="font-family:'Cinzel',serif;font-weight:800;font-size:24px;letter-spacing:.05em;margin:8px 0 0;color:#F4F6F8;text-shadow:0 0 26px rgba(107,79,160,.5);">CAST THE BONES</h2>
+          </div>
+
+          <!-- tumbling bone tiles -->
+          <div style="position:relative;display:flex;justify-content:center;gap:9px;margin:22px 0 0;">
+            <div style="width:36px;height:50px;border-radius:8px;background:linear-gradient(160deg,#2a2438,#17131f);border:1px solid rgba(200,180,230,.35);transform:rotate(-14deg);display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:rgba(200,180,230,.5);"></div></div>
+            <div style="width:36px;height:50px;border-radius:8px;background:linear-gradient(160deg,#2a2438,#17131f);border:1px solid rgba(200,180,230,.35);transform:rotate(9deg) translateY(6px);"></div>
+            <div style="width:36px;height:50px;border-radius:8px;background:linear-gradient(160deg,#2a2438,#17131f);border:1px solid rgba(200,180,230,.55);transform:rotate(-3deg);display:flex;align-items:center;justify-content:center;"><div style="width:16px;height:1px;background:rgba(200,180,230,.6);"></div></div>
+            <div style="width:36px;height:50px;border-radius:8px;background:linear-gradient(160deg,#2a2438,#17131f);border:1px solid rgba(200,180,230,.35);transform:rotate(18deg) translateY(4px);"></div>
+            <div style="width:36px;height:50px;border-radius:8px;background:linear-gradient(160deg,#2a2438,#17131f);border:1px solid rgba(200,180,230,.35);transform:rotate(-20deg);display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:rgba(200,180,230,.5);"></div></div>
+          </div>
+
+          <!-- odds ledger (transparent-odds, ethical disclosure) -->
+          <div style="margin:26px 22px 0;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);">
+            <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;color:#6c7c8f;margin-bottom:8px;">ODDS · DISCLOSED</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;font-family:'Space Grotesk',sans-serif;font-size:11px;color:#a9bccc;"><span style="display:flex;align-items:center;gap:6px;"><span style="width:8px;height:8px;border-radius:2px;background:#6c7c8f;"></span>Resonance (small)</span><span style="font-family:'Space Mono',monospace;color:#8a97a8;">62%</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-family:'Space Grotesk',sans-serif;font-size:11px;color:#a9bccc;"><span style="display:flex;align-items:center;gap:6px;"><span style="width:8px;height:8px;border-radius:2px;background:#00C2C7;"></span>Resonance (burst)</span><span style="font-family:'Space Mono',monospace;color:#8fd8da;">23%</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-family:'Space Grotesk',sans-serif;font-size:11px;color:#a9bccc;"><span style="display:flex;align-items:center;gap:6px;"><span style="width:8px;height:8px;border-radius:2px;background:#6B4FA0;"></span>Rune shard</span><span style="font-family:'Space Mono',monospace;color:#c3b2e6;">10%</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-family:'Space Grotesk',sans-serif;font-size:11px;color:#a9bccc;"><span style="display:flex;align-items:center;gap:6px;"><span style="width:8px;height:8px;border-radius:2px;background:#B8922A;"></span>25 Feathers</span><span style="font-family:'Space Mono',monospace;color:#E4C15A;">4%</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-family:'Space Grotesk',sans-serif;font-size:11px;color:#F4F6F8;"><span style="display:flex;align-items:center;gap:6px;"><span style="width:8px;height:8px;border-radius:2px;background:linear-gradient(135deg,#00C2C7,#E4C15A);"></span>Cosmetic (rare)</span><span style="font-family:'Space Mono',monospace;color:#F4F6F8;">1%</span></div>
+            </div>
+            <div style="font-family:'Space Mono',monospace;font-size:8px;color:#5f7183;margin-top:8px;">Pity: guaranteed Rune+ every 10 casts.</div>
+          </div>
+
+          <div style="position:absolute;left:22px;right:22px;bottom:30px;display:flex;flex-direction:column;gap:10px;">
+            <button style="all:unset;cursor:pointer;display:block;text-align:center;padding:15px;border-radius:14px;background:linear-gradient(135deg,#6B4FA0,#9678d0);font-family:'Cinzel',serif;font-weight:700;font-size:16px;letter-spacing:.06em;color:#fff;box-shadow:0 0 26px rgba(107,79,160,.5);">CAST · FREE (1 LEFT TODAY)</button>
+            <button style="all:unset;cursor:pointer;display:flex;justify-content:center;align-items:center;gap:8px;text-align:center;padding:13px;border-radius:14px;background:rgba(184,146,42,.1);border:1px solid rgba(184,146,42,.4);font-family:'Cinzel',serif;font-weight:600;font-size:13px;color:#E4C15A;">CAST ×10 <span style="display:inline-block;width:10px;height:10px;background:linear-gradient(135deg,#00C2C7,#B8922A);transform:rotate(45deg);border-radius:2px;"></span> 80</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div data-screen-label="12b Bone-Cast — Reveal" style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.24em;color:#B8922A;text-transform:uppercase;padding:5px 14px;border:1px solid rgba(184,146,42,.4);border-radius:999px;background:rgba(184,146,42,.08);">12b · BONE-CAST — reveal (payoff)</div>
+      <div style="width:344px;padding:12px;border-radius:46px;background:#05070a;border:1px solid #1c2735;box-shadow:0 40px 90px -24px rgba(0,0,0,.9), inset 0 0 0 2px #0e141d;">
+        <div style="position:relative;width:320px;height:660px;border-radius:36px;overflow:hidden;background:radial-gradient(140% 90% at 50% 45%, #241a38 0%, #120c1c 55%, #070810 100%);">
+          <div style="height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-family:'Space Mono',monospace;font-size:12px;color:#cdd6e2;"><span>9:41</span><span style="display:flex;gap:5px;align-items:center;"><span style="width:16px;height:9px;border:1px solid #cdd6e2;border-radius:2px;"></span><span style="width:15px;height:9px;background:#cdd6e2;border-radius:2px;"></span></span></div>
+
+          <!-- burst particles -->
+          <div style="position:absolute;top:38%;left:50%;width:280px;height:280px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(200,180,230,.25),transparent 70%);"></div>
+          <div style="position:absolute;top:28%;left:30%;width:6px;height:6px;border-radius:50%;background:#c3b2e6;box-shadow:0 0 8px #c3b2e6;"></div>
+          <div style="position:absolute;top:24%;left:68%;width:5px;height:5px;border-radius:50%;background:#00C2C7;box-shadow:0 0 8px #00C2C7;"></div>
+          <div style="position:absolute;top:50%;left:22%;width:4px;height:4px;border-radius:50%;background:#E4C15A;box-shadow:0 0 8px #E4C15A;"></div>
+          <div style="position:absolute;top:20%;left:50%;width:5px;height:5px;border-radius:50%;background:#F4F6F8;box-shadow:0 0 8px #F4F6F8;"></div>
+
+          <div style="position:relative;text-align:center;padding:60px 24px 0;">
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.3em;color:#c3b2e6;">THE PATTERN RESOLVES</div>
+          </div>
+
+          <div style="position:relative;margin:30px auto 0;width:200px;padding:24px 18px;border-radius:20px;background:linear-gradient(160deg,rgba(107,79,160,.22),rgba(20,14,30,.6));border:1px solid rgba(200,180,230,.5);box-shadow:0 0 40px rgba(150,110,220,.4);text-align:center;">
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.16em;color:#c3b2e6;">RARE</div>
+            <div style="width:64px;height:64px;margin:12px auto;border-radius:14px;background:repeating-linear-gradient(45deg,#241a38,#241a38 6px,#1a1328 6px,#1a1328 12px);border:1px dashed rgba(200,180,230,.6);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:7px;color:#b39be0;text-align:center;">RUNE<br>ICON</div>
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:16px;color:#F4F6F8;">Rune: Ember Sight</div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:11px;color:#a9bccc;margin-top:6px;">+8% crit chance, all towers</div>
+          </div>
+
+          <div style="position:absolute;left:24px;right:24px;bottom:30px;display:flex;flex-direction:column;gap:10px;">
+            <button style="all:unset;cursor:pointer;display:block;text-align:center;padding:15px;border-radius:14px;background:linear-gradient(135deg,#6B4FA0,#9678d0);font-family:'Cinzel',serif;font-weight:700;font-size:16px;letter-spacing:.06em;color:#fff;box-shadow:0 0 26px rgba(107,79,160,.5);">CLAIM</button>
+            <button style="all:unset;cursor:pointer;display:block;text-align:center;padding:12px;font-family:'Space Mono',monospace;font-size:11px;color:#8a97a8;">Cast again →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 13 DAILY RITUALS ================= -->
+    <div data-screen-label="13 Daily Rituals" style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.24em;color:#00C2C7;text-transform:uppercase;padding:5px 14px;border:1px solid rgba(0,194,199,.3);border-radius:999px;">13 · DAILY RITUALS (quests — earn Feathers)</div>
+      <div style="width:344px;padding:12px;border-radius:46px;background:#05070a;border:1px solid #1c2735;box-shadow:0 40px 90px -24px rgba(0,0,0,.9), inset 0 0 0 2px #0e141d;">
+        <div style="position:relative;width:320px;height:660px;border-radius:36px;overflow:hidden;background:radial-gradient(120% 70% at 50% 0%, #14202f 0%, #0b131d 50%, #070b10 100%);">
+          <div style="height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-family:'Space Mono',monospace;font-size:12px;color:#cdd6e2;"><span>9:41</span><span style="display:flex;gap:5px;align-items:center;"><span style="width:16px;height:9px;border:1px solid #cdd6e2;border-radius:2px;"></span><span style="width:15px;height:9px;background:#cdd6e2;border-radius:2px;"></span></span></div>
+
+          <div style="padding:16px 20px 0;display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:22px;letter-spacing:.05em;">DAILY RITUALS</div>
+            <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(0,194,199,.1);border:1px solid rgba(0,194,199,.35);"><span style="display:inline-block;width:10px;height:10px;background:linear-gradient(135deg,#00C2C7,#B8922A);transform:rotate(45deg);border-radius:2px;"></span><span style="font-family:'Space Mono',monospace;font-size:12px;color:#8fd8da;font-weight:700;">128</span></div>
+          </div>
+
+          <!-- login streak -->
+          <div style="margin:14px 20px 0;padding:12px 14px;border-radius:14px;background:linear-gradient(160deg,#141d2b,#0c131d);border:1px solid rgba(255,255,255,.07);">
+            <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;color:#6c7c8f;margin-bottom:9px;">7-DAY VIGIL · DAY 3</div>
+            <div style="display:flex;justify-content:space-between;gap:5px;">
+              <div style="flex:1;text-align:center;"><div style="width:100%;aspect-ratio:1;border-radius:8px;background:#00C2C7;display:flex;align-items:center;justify-content:center;color:#04191c;font-size:11px;">✓</div><div style="font-family:'Space Mono',monospace;font-size:7px;color:#6c7c8f;margin-top:3px;">1</div></div>
+              <div style="flex:1;text-align:center;"><div style="width:100%;aspect-ratio:1;border-radius:8px;background:#00C2C7;display:flex;align-items:center;justify-content:center;color:#04191c;font-size:11px;">✓</div><div style="font-family:'Space Mono',monospace;font-size:7px;color:#6c7c8f;margin-top:3px;">2</div></div>
+              <div style="flex:1;text-align:center;"><div style="width:100%;aspect-ratio:1;border-radius:8px;background:rgba(0,194,199,.18);border:1px solid #00C2C7;box-shadow:0 0 10px rgba(0,194,199,.5);"></div><div style="font-family:'Space Mono',monospace;font-size:7px;color:#8fd8da;margin-top:3px;">3</div></div>
+              <div style="flex:1;text-align:center;"><div style="width:100%;aspect-ratio:1;border-radius:8px;background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.15);"></div><div style="font-family:'Space Mono',monospace;font-size:7px;color:#5f7183;margin-top:3px;">4</div></div>
+              <div style="flex:1;text-align:center;"><div style="width:100%;aspect-ratio:1;border-radius:8px;background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.15);"></div><div style="font-family:'Space Mono',monospace;font-size:7px;color:#5f7183;margin-top:3px;">5</div></div>
+              <div style="flex:1;text-align:center;"><div style="width:100%;aspect-ratio:1;border-radius:8px;background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.15);"></div><div style="font-family:'Space Mono',monospace;font-size:7px;color:#5f7183;margin-top:3px;">6</div></div>
+              <div style="flex:1;text-align:center;"><div style="width:100%;aspect-ratio:1;border-radius:8px;background:rgba(184,146,42,.16);border:1px solid rgba(184,146,42,.6);"></div><div style="font-family:'Space Mono',monospace;font-size:7px;color:#E4C15A;margin-top:3px;">7★</div></div>
+            </div>
+          </div>
+
+          <!-- daily quests -->
+          <div style="padding:16px 20px 0;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;color:#6c7c8f;">TODAY</div>
+          <div style="margin:8px 20px 0;display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 13px;border-radius:12px;background:linear-gradient(160deg,#141d2b,#0c131d);border:1px solid rgba(0,194,199,.35);">
+              <div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#F4F6F8;font-weight:600;">Clear 3 waves</div>
+                <div style="font-family:'Space Mono',monospace;font-size:9px;color:#00C2C7;">DONE · +15 <span style="color:#8fd8da;">FEATHERS</span></div>
+              </div>
+              <div style="padding:7px 14px;border-radius:9px;background:#00C2C7;font-family:'Space Mono',monospace;font-size:10px;color:#04191c;font-weight:700;">CLAIM</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 13px;border-radius:12px;background:linear-gradient(160deg,#141d2b,#0c131d);border:1px solid rgba(255,255,255,.08);">
+              <div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#F4F6F8;font-weight:600;">Place 5 towers</div>
+                <div style="font-family:'Space Mono',monospace;font-size:9px;color:#8a97a8;">3 / 5 · +10 FEATHERS</div>
+              </div>
+              <div style="width:44px;height:5px;border-radius:3px;background:#1a212b;"><div style="width:60%;height:100%;background:#6c7c8f;border-radius:3px;"></div></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 13px;border-radius:12px;background:linear-gradient(160deg,#141d2b,#0c131d);border:1px solid rgba(255,255,255,.08);">
+              <div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#F4F6F8;font-weight:600;">Watch 1 rewarded ad</div>
+                <div style="font-family:'Space Mono',monospace;font-size:9px;color:#8a97a8;">0 / 1 · +10 FEATHERS · +500 RP</div>
+              </div>
+              <div style="padding:7px 12px;border-radius:9px;background:rgba(0,194,199,.1);border:1px solid rgba(0,194,199,.35);font-family:'Space Mono',monospace;font-size:10px;color:#8fd8da;">▶ WATCH</div>
+            </div>
+          </div>
+
+          <!-- weekly quest -->
+          <div style="margin:16px 20px 0;padding:13px;border-radius:14px;background:linear-gradient(150deg,rgba(184,146,42,.16),rgba(107,79,160,.1));border:1px solid rgba(184,146,42,.4);">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;color:#E4C15A;">WEEKLY RITE</div>
+              <div style="font-family:'Space Mono',monospace;font-size:9px;color:#8a97a8;">1 / 3</div>
+            </div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;color:#F4F6F8;font-weight:600;margin-top:3px;">Defeat Whisper 3 times</div>
+            <div style="height:5px;border-radius:3px;background:#1a212b;margin-top:8px;overflow:hidden;"><div style="height:100%;width:33%;background:linear-gradient(90deg,#B8922A,#E4C15A);border-radius:3px;"></div></div>
+            <div style="font-family:'Space Mono',monospace;font-size:9px;color:#E4C15A;margin-top:6px;">Reward: 100 Feathers + cosmetic border</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 14 STORE — FEATHERS ================= -->
+    <div data-screen-label="14 Store Feathers" style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.24em;color:#00C2C7;text-transform:uppercase;padding:5px 14px;border:1px solid rgba(0,194,199,.3);border-radius:999px;">14 · STORE — FEATHER PACKS (premium currency)</div>
+      <div style="width:344px;padding:12px;border-radius:46px;background:#05070a;border:1px solid #1c2735;box-shadow:0 40px 90px -24px rgba(0,0,0,.9), inset 0 0 0 2px #0e141d;">
+        <div style="position:relative;width:320px;height:660px;border-radius:36px;overflow:hidden;background:radial-gradient(120% 70% at 50% 0%, #14202f 0%, #0b131d 50%, #070b10 100%);">
+          <div style="height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-family:'Space Mono',monospace;font-size:12px;color:#cdd6e2;"><span>9:41</span><span style="display:flex;gap:5px;align-items:center;"><span style="width:16px;height:9px;border:1px solid #cdd6e2;border-radius:2px;"></span><span style="width:15px;height:9px;background:#cdd6e2;border-radius:2px;"></span></span></div>
+
+          <div style="padding:16px 22px 0;display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:22px;letter-spacing:.05em;">SHOP</div>
+            <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(0,194,199,.1);border:1px solid rgba(0,194,199,.35);"><span style="display:inline-block;width:10px;height:10px;background:linear-gradient(135deg,#00C2C7,#B8922A);transform:rotate(45deg);border-radius:2px;"></span><span style="font-family:'Space Mono',monospace;font-size:12px;color:#8fd8da;font-weight:700;">128</span></div>
+          </div>
+
+          <div style="padding:14px 22px 0;display:flex;gap:6px;">
+            <div style="flex:1;text-align:center;padding:8px 0;border-radius:9px;font-family:'Space Mono',monospace;font-size:9px;color:#8a97a8;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);">COSMETICS</div>
+            <div style="flex:1;text-align:center;padding:8px 0;border-radius:9px;font-family:'Space Mono',monospace;font-size:9px;color:#8a97a8;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);">CONSUMABLES</div>
+            <div style="flex:1;text-align:center;padding:8px 0;border-radius:9px;font-family:'Space Mono',monospace;font-size:9px;color:#E4C15A;background:rgba(184,146,42,.1);border:1px solid rgba(184,146,42,.35);">PASS</div>
+            <div style="flex:1;text-align:center;padding:8px 0;border-radius:9px;font-family:'Space Mono',monospace;font-size:9px;color:#04191c;background:#00C2C7;font-weight:700;">FEATHERS</div>
+          </div>
+
+          <div style="font-family:'Space Grotesk',sans-serif;font-style:italic;font-size:10px;color:#8a97a8;text-align:center;margin-top:10px;">Feathers: earned via Daily Rituals, or bought here.</div>
+
+          <div style="margin:14px 20px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div style="padding:13px;border-radius:14px;background:linear-gradient(160deg,#141d2b,#0c131d);border:1px solid rgba(0,194,199,.25);text-align:center;">
+              <div style="display:inline-block;width:24px;height:24px;background:linear-gradient(135deg,#00C2C7,#B8922A);transform:rotate(45deg);border-radius:5px;margin:6px 0 12px;"></div>
+              <div style="font-family:'Space Mono',monospace;font-size:15px;color:#F4F6F8;font-weight:700;">100</div>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#6c7c8f;margin-bottom:8px;">HANDFUL</div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#8fd8da;font-weight:600;">$1.99</div>
+            </div>
+            <div style="padding:13px;border-radius:14px;background:linear-gradient(160deg,#1c2a2c,#0f1c1d);border:2px solid #00C2C7;text-align:center;position:relative;box-shadow:0 0 20px rgba(0,194,199,.25);">
+              <div style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:7px;letter-spacing:.08em;color:#04191c;background:#00C2C7;padding:2px 8px;border-radius:999px;">POPULAR</div>
+              <div style="display:inline-block;width:28px;height:28px;background:linear-gradient(135deg,#00C2C7,#B8922A);transform:rotate(45deg);border-radius:6px;margin:8px 0 12px;"></div>
+              <div style="font-family:'Space Mono',monospace;font-size:16px;color:#F4F6F8;font-weight:700;">550 <span style="font-size:9px;color:#8fd8da;">+10%</span></div>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#6c7c8f;margin-bottom:8px;">POUCH</div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#8fd8da;font-weight:600;">$9.99</div>
+            </div>
+            <div style="padding:13px;border-radius:14px;background:linear-gradient(160deg,#141d2b,#0c131d);border:1px solid rgba(184,146,42,.3);text-align:center;">
+              <div style="display:inline-block;width:28px;height:28px;background:linear-gradient(135deg,#00C2C7,#E4C15A);transform:rotate(45deg);border-radius:6px;margin:8px 0 12px;"></div>
+              <div style="font-family:'Space Mono',monospace;font-size:16px;color:#F4F6F8;font-weight:700;">1,200 <span style="font-size:9px;color:#E4C15A;">+20%</span></div>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#6c7c8f;margin-bottom:8px;">HOARD</div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#E4C15A;font-weight:600;">$19.99</div>
+            </div>
+            <div style="padding:13px;border-radius:14px;background:linear-gradient(160deg,#241a10,#160f09);border:2px solid #B8922A;text-align:center;position:relative;box-shadow:0 0 20px rgba(184,146,42,.3);">
+              <div style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:7px;letter-spacing:.08em;color:#241a05;background:#E4C15A;padding:2px 8px;border-radius:999px;">BEST VALUE</div>
+              <div style="display:inline-block;width:32px;height:32px;background:linear-gradient(135deg,#E4C15A,#00C2C7);transform:rotate(45deg);border-radius:7px;margin:9px 0 12px;"></div>
+              <div style="font-family:'Space Mono',monospace;font-size:16px;color:#F4F6F8;font-weight:700;">3,000 <span style="font-size:9px;color:#E4C15A;">+35%</span></div>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#6c7c8f;margin-bottom:8px;">MURDER'S RANSOM</div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#E4C15A;font-weight:600;">$49.99</div>
+            </div>
+          </div>
+
+          <div style="position:absolute;left:20px;right:20px;bottom:24px;padding:10px 13px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);text-align:center;font-family:'Space Mono',monospace;font-size:9px;color:#6c7c8f;">Feathers never expire. No pay-to-win — cosmetics, Bone-Cast rolls & convenience only.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- END SCREENS -->
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

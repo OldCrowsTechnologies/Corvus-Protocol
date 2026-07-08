@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "Corvus Protocol",
+    "slug": "corvus-protocol",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "corvusprotocol",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#05070a",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#05070a"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.madapps.corvusprotocol"
+    },
+    "android": {
+      "package": "com.madapps.corvusprotocol",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#05070a"
+      }
+    },
+    "web": {
+      "favicon": "./assets/icon.png"
+    },
+    "plugins": [
+      "expo-font",
+      "expo-asset"
+    ]
+  }
+}
