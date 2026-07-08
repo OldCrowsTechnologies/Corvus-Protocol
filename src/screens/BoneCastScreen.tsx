@@ -47,7 +47,7 @@ export function BoneCastScreen({ navigation }: Props) {
 
   const castFree = () => {
     if (boneCast.freeCastsRemaining <= 0) {
-      Alert.alert('No free casts', 'Your free cast returns tomorrow — or cast ×10 with Feathers.');
+      Alert.alert('No free casts', 'Your free cast returns tomorrow — or cast ×10 with Murder Coins.');
       return;
     }
     revealResult(storeCastFree());
@@ -55,7 +55,7 @@ export function BoneCastScreen({ navigation }: Props) {
 
   const castTen = () => {
     if (feathers < CAST_X10_COST) {
-      Alert.alert('Not enough Feathers', `Cast ×10 costs ${CAST_X10_COST} Feathers. Earn more in Daily Rituals.`);
+      Alert.alert('Not enough Murder Coins', `Cast ×10 costs ${CAST_X10_COST} Murder Coins. Earn more in Daily Rituals.`);
       return;
     }
     // Spend + 10 rolls happen atomically in the store; returns the best result to reveal.

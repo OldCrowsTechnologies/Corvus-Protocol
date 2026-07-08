@@ -59,11 +59,11 @@ ok(prestigeMultiplier(-5) >= 1, 'prestige(negative) clamps >=1');
 for (let e = 0; e <= 60; e++) ok(finite(prestigeMultiplier(e)), `prestige(${e}) finite`);
 ok(nextPrestigeMultiplier(3) > prestigeMultiplier(3), 'next multiplier grows');
 
-// offline: cap at 8h, never negative, handles junk time
-for (const secs of [-99999, 0, 60, 3600, 8 * 3600, 999 * 3600, NaN, Infinity]) {
+// offline: cap at 12h, never negative, handles junk time
+for (const secs of [-99999, 0, 60, 3600, 12 * 3600, 999 * 3600, NaN, Infinity]) {
   const r = offlineResonance({ epoch: 3, secondsElapsed: secs, conveniencePass: true });
   ok(finite(r.earned) && r.earned >= 0, `offline earned finite&>=0 for secs=${secs} (got ${r.earned})`);
-  ok(r.hours >= 0 && r.hours <= 8 + 1e-9, `offline hours capped 0..8 for secs=${secs} (got ${r.hours})`);
+  ok(r.hours >= 0 && r.hours <= 12 + 1e-9, `offline hours capped 0..12 for secs=${secs} (got ${r.hours})`);
 }
 
 // formatNumber must never emit "NaN"/"undefined"/crash

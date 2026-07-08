@@ -18,7 +18,7 @@ export function SettingsScreen({ navigation }: Props) {
   const resetAccount = useStore((s) => s.resetAccount);
 
   const confirmReset = () =>
-    Alert.alert('Reset account', 'This wipes all progress, epochs, and Feathers. This cannot be undone.', [
+    Alert.alert('Reset account', 'This wipes all progress, epochs, and Murder Coins. This cannot be undone.', [
       { text: 'Cancel', style: 'cancel' },
       {
         text: 'Reset',

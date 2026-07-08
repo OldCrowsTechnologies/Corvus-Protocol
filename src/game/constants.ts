@@ -11,7 +11,7 @@ export const MAX_WAVES = 15;
 export const BOSS_WAVE = 15;
 export const MAX_TOWERS = 8;
 export const TOWER_HEALTH = 100;
-export const OFFLINE_CAP_HOURS = 8;
+export const OFFLINE_CAP_HOURS = 12;
 
 export interface TowerDef {
   type: TowerType;
@@ -94,7 +94,7 @@ export interface EnemyDef {
 export const ENEMIES: Record<EnemyType, EnemyDef> = {
   wisp: {
     type: 'wisp',
-    name: 'Wisp',
+    name: 'Whisperling',
     tag: 'FODDER',
     baseHealth: 50,
     speed: 0.12,
@@ -107,7 +107,7 @@ export const ENEMIES: Record<EnemyType, EnemyDef> = {
   },
   wailer: {
     type: 'wailer',
-    name: 'Wailer',
+    name: 'Echo Wraith',
     tag: 'DEBUFFER',
     baseHealth: 90,
     speed: 0.06,
@@ -120,7 +120,7 @@ export const ENEMIES: Record<EnemyType, EnemyDef> = {
   },
   shrieker: {
     type: 'shrieker',
-    name: 'Shrieker',
+    name: 'Void Shrieker',
     tag: 'SWARM',
     baseHealth: 40,
     speed: 0.16,
@@ -133,7 +133,7 @@ export const ENEMIES: Record<EnemyType, EnemyDef> = {
   },
   husk: {
     type: 'husk',
-    name: 'Husk',
+    name: 'Mourning Titan',
     tag: 'TANK',
     baseHealth: 220,
     speed: 0.05,

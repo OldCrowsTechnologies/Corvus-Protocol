@@ -20,7 +20,7 @@ export const ODDS: OddsRow[] = [
   { rarity: 'resonance_small', label: 'Resonance (small)', pct: 62, color: colors.textFaint },
   { rarity: 'resonance_burst', label: 'Resonance (burst)', pct: 23, color: colors.teal },
   { rarity: 'rune', label: 'Rune shard', pct: 10, color: colors.purple },
-  { rarity: 'feathers', label: '25 Feathers', pct: 4, color: colors.gold },
+  { rarity: 'feathers', label: '25 Murder Coins', pct: 4, color: colors.gold },
   { rarity: 'cosmetic', label: 'Cosmetic (rare)', pct: 1, color: colors.goldLight },
 ];
 
@@ -66,7 +66,7 @@ function buildResult(rarity: BoneCastRarity, rng: () => number): BoneCastResult 
       return { rarity, tier: tierFor(rarity), label: `Rune: ${r.name}`, detail: r.detail };
     }
     case 'feathers':
-      return { rarity, tier: tierFor(rarity), label: '25 Feathers', detail: 'The Chorus is generous.' };
+      return { rarity, tier: tierFor(rarity), label: '25 Murder Coins', detail: 'The Chorus is generous.' };
     case 'cosmetic': {
       const c = COSMETICS[Math.floor(rng() * COSMETICS.length)];
       return { rarity, tier: tierFor(rarity), label: c.name, detail: c.detail };
@@ -103,4 +103,4 @@ export function isRunePlus(rarity: BoneCastRarity): boolean {
   return rarity === 'rune' || rarity === 'feathers' || rarity === 'cosmetic';
 }
 
-export const CAST_X10_COST = 80; // Feathers
+export const CAST_X10_COST = 80; // Murder Coins

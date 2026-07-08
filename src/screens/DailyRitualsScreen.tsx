@@ -103,10 +103,10 @@ export function DailyRitualsScreen({ navigation }: Props) {
           </View>
           <View style={[styles.between, { marginTop: 6 }]}>
             <T variant="mono" size={9} color={colors.goldLight}>
-              Reward: {rituals.weekly.reward} Feathers + cosmetic border
+              Reward: {rituals.weekly.reward} Murder Coins + cosmetic border
             </T>
             {rituals.weekly.progress >= rituals.weekly.target && !rituals.weekly.claimed ? (
-              <Pressable onPress={() => { claimWeekly(); Alert.alert('Claimed', `+${rituals.weekly.reward} Feathers`); }} style={styles.claimBtn}>
+              <Pressable onPress={() => { claimWeekly(); Alert.alert('Claimed', `+${rituals.weekly.reward} Murder Coins`); }} style={styles.claimBtn}>
                 <T variant="mono" size={10} color="#241a05">
                   CLAIM
                 </T>
@@ -121,7 +121,7 @@ export function DailyRitualsScreen({ navigation }: Props) {
 
 function QuestRow({ quest, onClaim, onWatch }: { quest: DailyQuest; onClaim: () => void; onWatch: () => void }) {
   const complete = quest.progress >= quest.target;
-  const rewardLabel = `+${quest.reward} FEATHERS${quest.bonusResonance ? ` · +${quest.bonusResonance} RP` : ''}`;
+  const rewardLabel = `+${quest.reward} MURDER COINS${quest.bonusResonance ? ` · +${quest.bonusResonance} RP` : ''}`;
   return (
     <Panel border={complete && !quest.claimed ? 'rgba(0,194,199,.35)' : 'rgba(255,255,255,.08)'} style={styles.questRow}>
       <View style={{ flex: 1 }}>

@@ -26,11 +26,11 @@ export const towerArt: Record<TowerType, ImageSourcePropType> = {
 };
 
 export const currencyArt = {
-  // Resonance uses the gold coin (color-coherent with the gold Resonance theme);
-  // Feathers (premium) uses the teal Echo-Shards crystal.
-  resonance: require('../assets/currency/murder_coins.png'),
-  feathers: require('../assets/currency/echo_shards.png'),
-  crystal: require('../assets/currency/resonance_crystal.png'),
+  // Two-currency economy. Resonance (soft) = the purple Resonance crystal;
+  // Murder Coins (premium, `feathers` field internally) = the gold coin.
+  resonance: require('../assets/currency/resonance_crystal.png'),
+  feathers: require('../assets/currency/murder_coins.png'),
+  echoShards: require('../assets/currency/echo_shards.png'),
   essence: require('../assets/currency/essence.png'),
 } as const;
 

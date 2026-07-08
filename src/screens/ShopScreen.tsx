@@ -21,7 +21,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'cosmetics', label: 'COSMETICS' },
   { id: 'consumables', label: 'CONSUMABLES' },
   { id: 'pass', label: 'PASS' },
-  { id: 'feathers', label: 'FEATHERS' },
+  { id: 'feathers', label: 'COINS' },
 ];
 
 const COSMETIC_GALLERY = [
@@ -167,7 +167,7 @@ export function ShopScreen({ navigation, route }: Props) {
         {tab === 'feathers' && (
           <>
             <T variant="body" italic size={10} color={colors.textMute} center style={{ marginBottom: 6 }}>
-              Feathers: earned via Daily Rituals, or bought here.
+              Murder Coins: earned via Daily Rituals, or bought here.
             </T>
             <View style={styles.packGrid}>
               <FeatherPack tier="HANDFUL" amount={100} bonus={null} price="$1.99" onBuy={() => grant(addFeathers, 100)} />
@@ -177,7 +177,7 @@ export function ShopScreen({ navigation, route }: Props) {
             </View>
             <View style={styles.disclosure}>
               <T variant="mono" size={9} color={colors.textFaint} center>
-                Feathers never expire. No pay-to-win — cosmetics, Bone-Cast rolls & convenience only.
+                Murder Coins never expire. No pay-to-win — cosmetics, Bone-Cast rolls & convenience only.
               </T>
             </View>
           </>
@@ -219,7 +219,7 @@ export function ShopScreen({ navigation, route }: Props) {
 
 function grant(addFeathers: (n: number) => void, n: number) {
   addFeathers(n);
-  Alert.alert('Purchase complete', `+${n} Feathers added. (Sandbox — no real charge.)`);
+  Alert.alert('Purchase complete', `+${n} Murder Coins added. (Sandbox — no real charge.)`);
 }
 
 function ScrollAdRow({ onWatch, today }: { onWatch: () => void; today: number }) {
