@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, type TextProps, type TextStyle } from 'react-native';
 
-import { colors, fonts, fs } from '@/theme/tokens';
+import { colors, fonts } from '@/theme/tokens';
+import { fs } from '@/theme/scale';
 
 type Variant =
   | 'display'

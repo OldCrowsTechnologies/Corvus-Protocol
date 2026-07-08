@@ -20,6 +20,11 @@ import {
   placeTower,
   sellTower,
   canPlaceTower,
+  upgradeTower,
+  upgradeCost,
+  towerDps,
+  towerRangeNorm,
+  MAX_TOWER_LEVEL,
 } from '../src/game/engine.ts';
 import { MAX_TOWERS, MAX_WAVES, DIFFICULTIES, ROLLABLE_AFFIXES } from '../src/game/constants.ts';
 import { BUILDABLE, PATH } from '../src/game/board.ts';
@@ -304,6 +309,50 @@ console.log('\n== winnability (smart placement) ==');
   ok(normal.status === 'won', `Normal is winnable with smart play (reached wave ${normal.maxWave}, ${normal.status})`);
   ok(easy.status === 'won', `Easy is winnable (${easy.status})`);
   ok(hard.maxWave >= 8, `Hard is at least deep-reachable (wave ${hard.maxWave})`);
+}
+
+// in-wave tower upgrades
+console.log('\n== tower upgrades ==');
+{
+  const st = createCampaign({ difficulty: 'normal', epoch: 0, affix: 'none', ritualActive: false, startResonance: 1_000_000 });
+  beginNextWave(st);
+  placeTower(st, 'corvus', BUILDABLE[0].x, BUILDABLE[0].y);
+  const tw = st.towers[0];
+  ok(tw.level === 1, 'tower starts at L1');
+  const baseDps = towerDps('corvus', 1);
+  const baseRange = towerRangeNorm('corvus', 1);
+  let prevCost = 0;
+  for (let l = 1; l < MAX_TOWER_LEVEL; l++) {
+    const cost = upgradeCost('corvus', tw.level);
+    const before = st.resonance;
+    ok(cost > prevCost, `upgrade cost rises with level (L${tw.level}: ${cost})`);
+    prevCost = cost;
+    ok(upgradeTower(st, tw.id), `upgrade L${tw.level - 1 + 1} succeeds when affordable`);
+    ok(st.resonance === before - cost, 'upgrade deducts exactly its cost');
+  }
+  ok(tw.level === MAX_TOWER_LEVEL, `reaches max level ${MAX_TOWER_LEVEL}`);
+  ok(!upgradeTower(st, tw.id), 'cannot upgrade past max level');
+  ok(towerDps('corvus', MAX_TOWER_LEVEL) > baseDps, 'max-level DPS exceeds base');
+  ok(towerRangeNorm('corvus', MAX_TOWER_LEVEL) > baseRange, 'max-level range exceeds base');
+  ok(st.resonance >= 0, 'resonance never negative after upgrades');
+
+  // broke player can't upgrade
+  const poor = createCampaign({ difficulty: 'normal', epoch: 0, affix: 'none', ritualActive: false, startResonance: 250 });
+  beginNextWave(poor);
+  placeTower(poor, 'corvus', BUILDABLE[0].x, BUILDABLE[0].y); // costs 200, leaves 50
+  const r0 = poor.resonance;
+  ok(!upgradeTower(poor, poor.towers[0].id), 'cannot upgrade without enough Resonance');
+  ok(poor.resonance === r0, 'failed upgrade leaves Resonance untouched');
+  ok(!upgradeTower(poor, 'nonexistent'), 'upgrading invalid id is a no-op');
+
+  // sell refunds base+upgrades and never goes negative
+  const sellSt = createCampaign({ difficulty: 'normal', epoch: 0, affix: 'none', ritualActive: false, startResonance: 100000 });
+  beginNextWave(sellSt);
+  placeTower(sellSt, 'mira', BUILDABLE[0].x, BUILDABLE[0].y);
+  upgradeTower(sellSt, sellSt.towers[0].id);
+  const beforeSell = sellSt.resonance;
+  sellTower(sellSt, sellSt.towers[0].id);
+  ok(sellSt.resonance > beforeSell && sellSt.towers.length === 0, 'sell refunds and removes tower');
 }
 
 // ---------------------------------------------------------------------------

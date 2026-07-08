@@ -7,13 +7,14 @@ import { boardMap, enemyArt, towerArt } from '@/art';
 import { T } from '@/components/T';
 import { BUILDABLE, GRID_COLS, GRID_ROWS, PATH } from '@/game/board';
 import { TOWERS } from '@/game/constants';
-import { normRange } from '@/game/engine';
+import { normRange, towerRangeNorm } from '@/game/engine';
 import type { CampaignState, TowerType } from '@/game/types';
 import { colors } from '@/theme/tokens';
 
 interface Props {
   state: CampaignState;
   armed: TowerType | null;
+  selected?: string | null;
   onTapBoard: (nx: number, ny: number) => void;
 }
 
@@ -32,7 +33,7 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
  * Atmospheric isometric battlefield: painterly bible map backdrop → violet vignette →
  * luminescent path + pulsing altar + buildable pads → fog → drifting motes → enemies/towers.
  */
-export function CampaignBoard({ state, armed, onTapBoard }: Props) {
+export function CampaignBoard({ state, armed, selected, onTapBoard }: Props) {
   const [w, setW] = React.useState(0);
   const h = w * (GRID_ROWS / GRID_COLS);
   const cell = w / GRID_COLS;
@@ -121,23 +122,26 @@ export function CampaignBoard({ state, armed, onTapBoard }: Props) {
             />
             <Circle cx={altar.x * w} cy={altar.y * h} r={cell * 0.34} fill="rgba(107,79,160,0.35)" stroke="#b39be0" strokeWidth={1.5} />
 
-            {/* tower range rings */}
-            {state.towers.map((tw) => (
-              <Circle
-                key={`r${tw.id}`}
-                cx={tw.pos.x * w}
-                cy={tw.pos.y * h}
-                r={normRange(TOWERS[tw.type].range) * w}
-                fill={TOWERS[tw.type].glowPrefix + '0.06)'}
-                stroke={TOWERS[tw.type].glowPrefix + '0.45)'}
-                strokeWidth={1.4}
-              />
-            ))}
+            {/* tower range rings — selected tower's ring is emphasized */}
+            {state.towers.map((tw) => {
+              const sel = tw.id === selected;
+              return (
+                <Circle
+                  key={`r${tw.id}`}
+                  cx={tw.pos.x * w}
+                  cy={tw.pos.y * h}
+                  r={towerRangeNorm(tw.type, tw.level) * w}
+                  fill={TOWERS[tw.type].glowPrefix + (sel ? '0.12)' : '0.06)')}
+                  stroke={TOWERS[tw.type].glowPrefix + (sel ? '0.9)' : '0.45)')}
+                  strokeWidth={sel ? 2.4 : 1.4}
+                />
+              );
+            })}
 
             {/* tower attack beams to their current target-in-range (nearest-progress enemy) */}
             {state.towers.map((tw) => {
               if (TOWERS[tw.type].dps <= 0) return null;
-              const range = normRange(TOWERS[tw.type].range);
+              const range = towerRangeNorm(tw.type, tw.level);
               let tgt: { x: number; y: number } | null = null;
               let best = -1;
               for (const en of state.enemies) {
@@ -200,18 +204,22 @@ export function CampaignBoard({ state, armed, onTapBoard }: Props) {
             );
           })}
 
-          {/* towers — bright bible art on a glowing base disc */}
+          {/* towers — bright bible art on a glowing base disc, with an upgrade-level badge */}
           {state.towers.map((tw) => {
             const tsize = Math.min(cell * 1.05, 58);
             const accent = TOWERS[tw.type].color;
+            const sel = tw.id === selected;
             return (
               <View
                 key={tw.id}
                 pointerEvents="none"
                 style={{ position: 'absolute', left: tw.pos.x * w - tsize / 2, top: tw.pos.y * h - tsize / 2, width: tsize, height: tsize, alignItems: 'center', justifyContent: 'flex-end' }}
               >
-                <View style={{ position: 'absolute', bottom: 2, width: tsize * 0.6, height: tsize * 0.26, borderRadius: tsize * 0.3, backgroundColor: TOWERS[tw.type].glowPrefix + '0.3)', borderWidth: 1.5, borderColor: accent, shadowColor: accent, shadowOpacity: 1, shadowRadius: 9 }} />
+                <View style={{ position: 'absolute', bottom: 2, width: tsize * 0.6, height: tsize * 0.26, borderRadius: tsize * 0.3, backgroundColor: TOWERS[tw.type].glowPrefix + (sel ? '0.5)' : '0.3)'), borderWidth: sel ? 2.5 : 1.5, borderColor: accent, shadowColor: accent, shadowOpacity: 1, shadowRadius: sel ? 14 : 9 }} />
                 <Image source={towerArt[tw.type]} style={{ width: tsize, height: tsize, resizeMode: 'contain' }} />
+                <View style={{ position: 'absolute', top: -2, right: tsize * 0.12, backgroundColor: accent, borderRadius: 6, paddingHorizontal: 4, paddingVertical: 1 }}>
+                  <T variant="monoBold" size={7} color="#06090d">L{tw.level}</T>
+                </View>
               </View>
             );
           })}

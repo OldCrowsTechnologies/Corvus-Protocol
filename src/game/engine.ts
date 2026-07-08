@@ -165,8 +165,46 @@ export function sellTower(state: CampaignState, id: string): void {
   const idx = state.towers.findIndex((t) => t.id === id);
   if (idx === -1) return;
   const t = state.towers[idx];
-  state.resonance += Math.round(TOWERS[t.type].cost * 0.5); // 50% refund
+  // refund 50% of everything sunk in (base + upgrades)
+  const sunk = TOWERS[t.type].cost + upgradeSpend(t.type, t.level);
+  state.resonance += Math.round(sunk * 0.5);
   state.towers.splice(idx, 1);
+  state.resonancePerSecond = idleResonancePerSecond(0, state.towers.length);
+}
+
+export const MAX_TOWER_LEVEL = 5;
+
+/** Cost to upgrade a tower from its current level to the next. Scales with level. */
+export function upgradeCost(type: TowerType, level: number): number {
+  return Math.round(TOWERS[type].cost * 0.7 * level);
+}
+
+/** Total Resonance sunk into upgrades to reach `level` (for sell refunds). */
+function upgradeSpend(type: TowerType, level: number): number {
+  let total = 0;
+  for (let l = 1; l < level; l++) total += upgradeCost(type, l);
+  return total;
+}
+
+/** Upgrade a placed tower one level in-wave. Returns true if it happened. */
+export function upgradeTower(state: CampaignState, id: string): boolean {
+  const t = state.towers.find((x) => x.id === id);
+  if (!t || t.level >= MAX_TOWER_LEVEL) return false;
+  const cost = upgradeCost(t.type, t.level);
+  if (state.resonance < cost) return false;
+  state.resonance -= cost;
+  t.level += 1;
+  return true;
+}
+
+/** Effective per-shot damage for a tower, factoring its upgrade level (+30%/level). */
+export function towerDps(type: TowerType, level: number): number {
+  return TOWERS[type].dps * (1 + 0.3 * (level - 1));
+}
+
+/** Effective normalized range for a tower, factoring its upgrade level (+6%/level). */
+export function towerRangeNorm(type: TowerType, level: number): number {
+  return normRange(TOWERS[type].range) * (1 + 0.06 * (level - 1));
 }
 
 function dist(a: Vec2, b: Vec2): number {
@@ -267,12 +305,12 @@ function fireTower(state: CampaignState, t: Tower, ev: TickEvents, rng: () => nu
   const def = TOWERS[t.type];
   if (def.dps <= 0 && t.type !== 'mira') return;
 
-  let range = normRange(def.range);
+  let range = towerRangeNorm(t.type, t.level); // includes upgrade-level bonus
   if (state.affix === 'fog') range *= 0.9; // FOG −10% range
 
   // Mira deals no direct damage but executes low-HP enemies in range.
   if (t.type === 'mira') {
-    const execRange = normRange(TOWERS.mira.range + 5 * (lvl(state, 'mira') - 1));
+    const execRange = range + normRange(5 * (lvl(state, 'mira') - 1));
     const execThreshold = 0.3 + 0.01 * (lvl(state, 'mira') - 1); // higher level executes sooner
     const exec = state.enemies.find(
       (e) => e.type !== 'whisper' && e.health <= e.maxHealth * execThreshold && dist(e.pos, t.pos) <= execRange,
@@ -299,7 +337,7 @@ function fireTower(state: CampaignState, t: Tower, ev: TickEvents, rng: () => nu
   // Corvus: +1% crit chance per level (spec).
   const critChance = def.critChance + (t.type === 'corvus' ? 0.01 * (lvl(state, 'corvus') - 1) : 0);
   const { damage, crit } = computeDamage({
-    dps: def.dps,
+    dps: towerDps(t.type, t.level), // includes upgrade-level bonus
     critChance,
     proximityBuff: proximity,
     miraAmp: amp,

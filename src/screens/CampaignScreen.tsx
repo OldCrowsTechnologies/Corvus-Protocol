@@ -17,8 +17,13 @@ import {
   beginNextWave,
   canPlaceTower,
   createCampaign,
+  MAX_TOWER_LEVEL,
   placeTower,
+  sellTower,
   tickCampaign,
+  towerDps,
+  upgradeCost,
+  upgradeTower,
 } from '@/game/engine';
 import { formatNumber } from '@/game/formulas';
 import type { AffixId, CampaignState, TowerType } from '@/game/types';
@@ -82,6 +87,7 @@ export function CampaignScreen({ navigation, route }: Props) {
   const startLevels = useRef<Record<TowerType, number> | null>(null);
   const [, forceRender] = useState(0);
   const [armed, setArmed] = useState<TowerType | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
   const [speed, setSpeed] = useState(1);
   const [paused, setPaused] = useState(false);
   const speedRef = useRef(1);
@@ -268,18 +274,47 @@ export function CampaignScreen({ navigation, route }: Props) {
   };
 
   const tapBoard = (nx: number, ny: number) => {
-    if (!armed) return;
-    const ok = placeTower(st, armed, nx, ny);
-    if (ok) {
-      store.getState().recordTowerPlaced();
+    if (armed) {
+      const ok = placeTower(st, armed, nx, ny);
+      if (ok) {
+        store.getState().recordTowerPlaced();
+        playSfx('place');
+        playVoice(armed, 'tower_placed');
+        if (Platform.OS !== 'web') Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+        if (tutStep === 1) setTutStep(2); // step 1 (place) advances on a successful placement
+        forceRender((n) => n + 1);
+      } else {
+        Alert.alert('Cannot place', canPlaceTower(st, armed) ? 'Tap an empty glowing pad near the path.' : 'Not enough Resonance or tower cap reached.');
+      }
+      return;
+    }
+    // not arming → select the nearest placed tower to inspect / upgrade
+    let nearest: string | null = null;
+    let best = 0.1;
+    for (const tw of st.towers) {
+      const d = Math.hypot(tw.pos.x - nx, tw.pos.y - ny);
+      if (d < best) { best = d; nearest = tw.id; }
+    }
+    setSelected(nearest);
+    if (nearest) playSfx('click');
+  };
+
+  const doUpgrade = () => {
+    if (!selected) return;
+    if (upgradeTower(st, selected)) {
       playSfx('place');
-      playVoice(armed, 'tower_placed');
-      if (Platform.OS !== 'web') Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
-      if (tutStep === 1) setTutStep(2); // step 1 (place) advances on a successful placement
+      if (Platform.OS !== 'web') Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
       forceRender((n) => n + 1);
     } else {
-      Alert.alert('Cannot place', canPlaceTower(st, armed) ? 'Tap an empty dark (buildable) tile.' : 'Not enough Resonance or tower cap reached.');
+      Alert.alert('Cannot upgrade', 'Not enough Resonance, or the tower is already at max level.');
     }
+  };
+  const doSell = () => {
+    if (!selected) return;
+    sellTower(st, selected);
+    setSelected(null);
+    playSfx('click');
+    forceRender((n) => n + 1);
   };
 
   const toggleSpeed = () => {
@@ -349,7 +384,7 @@ export function CampaignScreen({ navigation, route }: Props) {
       </View>
 
       {/* board */}
-      <CampaignBoard state={st} armed={armed} onTapBoard={tapBoard} />
+      <CampaignBoard state={st} armed={armed} selected={selected} onTapBoard={tapBoard} />
 
       {/* tower palette */}
       <View style={styles.palette}>
@@ -361,7 +396,7 @@ export function CampaignScreen({ navigation, route }: Props) {
           return (
             <Pressable
               key={id}
-              onPress={() => setArmed(active ? null : id)}
+              onPress={() => { setSelected(null); setArmed(active ? null : id); }}
               style={[
                 styles.card,
                 { backgroundColor: cc.glow + '0.12)', borderColor: active ? cc.main : cc.glow + '0.4)', opacity: afford ? 1 : 0.5 },
@@ -414,6 +449,57 @@ export function CampaignScreen({ navigation, route }: Props) {
           </T>
         </Pressable>
       </View>
+
+      {(() => {
+        const tw = selected ? st.towers.find((x) => x.id === selected) : null;
+        if (!tw) return null;
+        const def = TOWERS[tw.type];
+        const cc = charColors[tw.type];
+        const maxed = tw.level >= MAX_TOWER_LEVEL;
+        const cost = upgradeCost(tw.type, tw.level);
+        const afford = st.resonance >= cost;
+        return (
+          <View style={[styles.upgrade, { borderColor: cc.main }]}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+              <CharacterAvatar id={tw.type} size={38} borderWidth={1.5} />
+              <View style={{ flex: 1 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <T variant="display" size={14} color={colors.paper}>{def.name}</T>
+                  <Pressable onPress={() => setSelected(null)} hitSlop={10}>
+                    <T variant="mono" size={13} color={colors.textMute}>✕</T>
+                  </Pressable>
+                </View>
+                <T variant="mono" size={9} color={cc.soft} spacing={0.6}>
+                  {def.role} · LVL {tw.level}/{MAX_TOWER_LEVEL} · DPS {Math.round(towerDps(tw.type, tw.level) / 0.55)} · {tw.kills} kills
+                </T>
+              </View>
+            </View>
+            <View style={{ flexDirection: 'row', gap: 8, marginTop: 10 }}>
+              <Pressable
+                onPress={doUpgrade}
+                disabled={maxed}
+                style={[styles.upBtn, { borderColor: cc.main, backgroundColor: cc.glow + (maxed ? '0.06)' : afford ? '0.2)' : '0.1)'), opacity: maxed ? 0.5 : 1 }]}
+              >
+                {maxed ? (
+                  <T variant="monoBold" size={12} color={cc.soft}>MAX LEVEL</T>
+                ) : (
+                  <>
+                    <T variant="monoBold" size={12} color={afford ? colors.paper : colors.textMute}>UPGRADE → L{tw.level + 1}</T>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 2 }}>
+                      <ResonanceIcon size={11} />
+                      <T variant="mono" size={11} color={afford ? colors.goldLight : '#a06a6a'}>{formatNumber(cost)}</T>
+                    </View>
+                  </>
+                )}
+              </Pressable>
+              <Pressable onPress={doSell} style={styles.sellBtn}>
+                <T variant="monoBold" size={11} color="#e0987f">SELL</T>
+                <T variant="mono" size={9} color={colors.textMute} style={{ marginTop: 2 }}>refund</T>
+              </Pressable>
+            </View>
+          </View>
+        );
+      })()}
 
       {paused ? (
         <Pressable onPress={togglePause} style={styles.pauseOverlay}>
@@ -489,5 +575,36 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(5,7,10,.82)',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  upgrade: {
+    position: 'absolute',
+    left: 12,
+    right: 12,
+    bottom: 74,
+    padding: 12,
+    borderRadius: radii.lg,
+    borderWidth: 1.5,
+    backgroundColor: 'rgba(10,14,20,0.96)',
+    shadowColor: '#000',
+    shadowOpacity: 0.5,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 6 },
+  },
+  upBtn: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderRadius: radii.md,
+    borderWidth: 1,
+  },
+  sellBtn: {
+    width: 84,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: 'rgba(192,90,63,0.5)',
+    backgroundColor: 'rgba(192,90,63,0.12)',
   },
 });
