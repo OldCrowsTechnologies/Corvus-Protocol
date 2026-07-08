@@ -2,8 +2,7 @@ import React from 'react';
 import { Image, Pressable, StyleSheet, View, type GestureResponderEvent } from 'react-native';
 import Svg, { Circle, Defs, Line, Rect, RadialGradient, Stop } from 'react-native-svg';
 
-import { enemyArt } from '@/art';
-import { CharacterAvatar } from '@/components/CharacterAvatar';
+import { enemyArt, towerArt } from '@/art';
 import { T } from '@/components/T';
 import { BUILDABLE, GRID_COLS, GRID_ROWS, PATH } from '@/game/board';
 import { TOWERS } from '@/game/constants';
@@ -17,13 +16,13 @@ interface Props {
   onTapBoard: (nx: number, ny: number) => void;
 }
 
-/** On-board sprite pixel size per enemy type. */
+/** On-board sprite pixel size per enemy type (enlarged for on-phone visibility). */
 const ENEMY_SIZE: Record<string, number> = {
-  wisp: 24,
-  wailer: 26,
-  shrieker: 22,
-  husk: 32,
-  whisper: 48,
+  wisp: 34,
+  wailer: 38,
+  shrieker: 32,
+  husk: 46,
+  whisper: 68,
 };
 
 /** Top-down stylized board (flat-sprite fallback per handoff). Grid → path → altar → towers → enemies. */
@@ -105,9 +104,9 @@ export function CampaignBoard({ state, armed, onTapBoard }: Props) {
                 cx={tw.pos.x * w}
                 cy={tw.pos.y * h}
                 r={normRange(TOWERS[tw.type].range) * w}
-                fill={TOWERS[tw.type].glowPrefix + '0.05)'}
-                stroke={TOWERS[tw.type].glowPrefix + '0.28)'}
-                strokeWidth={1}
+                fill={TOWERS[tw.type].glowPrefix + '0.08)'}
+                stroke={TOWERS[tw.type].glowPrefix + '0.5)'}
+                strokeWidth={1.5}
               />
             ))}
 
@@ -131,16 +130,27 @@ export function CampaignBoard({ state, armed, onTapBoard }: Props) {
             );
           })}
 
-          {/* tower avatars overlaid */}
-          {state.towers.map((tw) => (
-            <View
-              key={tw.id}
-              pointerEvents="none"
-              style={{ position: 'absolute', left: tw.pos.x * w - 15, top: tw.pos.y * h - 15 }}
-            >
-              <CharacterAvatar id={tw.type} size={30} borderWidth={2} />
-            </View>
-          ))}
+          {/* tower icons overlaid — bright bible art on a glowing base disc */}
+          {state.towers.map((tw) => {
+            const tsize = Math.min(cell * 1.02, 56);
+            const accent = TOWERS[tw.type].color;
+            return (
+              <View
+                key={tw.id}
+                pointerEvents="none"
+                style={{ position: 'absolute', left: tw.pos.x * w - tsize / 2, top: tw.pos.y * h - tsize / 2, width: tsize, height: tsize, alignItems: 'center', justifyContent: 'flex-end' }}
+              >
+                <View
+                  style={{
+                    position: 'absolute', bottom: 2, width: tsize * 0.62, height: tsize * 0.28, borderRadius: tsize * 0.31,
+                    backgroundColor: TOWERS[tw.type].glowPrefix + '0.28)', borderWidth: 1.5, borderColor: accent,
+                    shadowColor: accent, shadowOpacity: 0.9, shadowRadius: 8, shadowOffset: { width: 0, height: 0 },
+                  }}
+                />
+                <Image source={towerArt[tw.type]} style={{ width: tsize, height: tsize, resizeMode: 'contain' }} />
+              </View>
+            );
+          })}
 
           {/* floating damage numbers */}
           {state.floaties.map((f) => {

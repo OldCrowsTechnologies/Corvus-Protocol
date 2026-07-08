@@ -9,12 +9,12 @@ type Bg = 'menu' | 'campaign' | 'prestige' | 'reveal' | 'flat' | 'top';
 
 /** Radial-ish background variants approximated with a LinearGradient (RN has no radial). */
 const BACKGROUNDS: Record<Bg, [string, string, string]> = {
-  menu: ['#14202f', '#0b131d', '#070b10'],
-  campaign: ['#16233a', '#0c1420', '#070b10'],
-  prestige: ['#1a1430', '#0e0c1a', '#070810'],
-  reveal: ['#241a38', '#120c1c', '#070810'],
-  flat: ['#0b131d', '#080d13', '#05070a'],
-  top: ['#14202f', '#0b131d', '#070b10'],
+  menu: ['#243a55', '#152234', '#0c1520'],
+  campaign: ['#26374f', '#16233a', '#0c1420'],
+  prestige: ['#2c2350', '#1a1430', '#0e0c1a'],
+  reveal: ['#3a2a54', '#241a38', '#120c1c'],
+  flat: ['#1a2636', '#111c2a', '#0a1018'],
+  top: ['#243a55', '#152234', '#0c1520'],
 };
 
 interface Props {

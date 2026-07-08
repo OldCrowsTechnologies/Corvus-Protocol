@@ -3,6 +3,27 @@
  * Exact hex values, type pairing, radii and glow rules taken from the design handoff
  * (docs/design/README.md · "Design Tokens" and the UI reference mockup).
  */
+import { Dimensions } from 'react-native';
+
+const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get('window');
+const SHORT = Math.min(SCREEN_W, SCREEN_H);
+const LONG = Math.max(SCREEN_W, SCREEN_H);
+
+/** True on tablet-class devices (short edge ≥ 600dp). */
+export const isTablet = SHORT >= 600;
+
+/**
+ * Global UI scale. Text and key sizes multiply by this so the app reads large and
+ * legible on a small phone and scales up further on a tablet. Base design width ≈ 380dp.
+ */
+export const uiScale = Math.min(Math.max(SHORT / 380, 1), isTablet ? 1.7 : 1.32);
+
+/** Font-size helper: everything is bumped ~24% over the old baseline, then device-scaled. */
+export function fs(size: number): number {
+  return Math.round(size * 1.24 * uiScale);
+}
+
+export const screen = { width: SCREEN_W, height: SCREEN_H, short: SHORT, long: LONG };
 
 export const colors = {
   // Background / neutrals

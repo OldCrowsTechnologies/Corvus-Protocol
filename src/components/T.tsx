@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, type TextProps, type TextStyle } from 'react-native';
 
-import { colors, fonts } from '@/theme/tokens';
+import { colors, fonts, fs } from '@/theme/tokens';
 
 type Variant =
   | 'display'
@@ -52,7 +52,7 @@ export function T({
 }: Props) {
   const composed: TextStyle = {
     fontFamily: familyFor[variant],
-    fontSize: size,
+    fontSize: fs(size),
     color,
     letterSpacing: spacing,
     textAlign: center ? 'center' : undefined,
