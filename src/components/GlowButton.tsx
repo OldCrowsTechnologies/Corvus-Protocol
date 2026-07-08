@@ -3,6 +3,7 @@ import * as Haptics from 'expo-haptics';
 import React from 'react';
 import { Platform, Pressable, StyleSheet, View, type ViewStyle } from 'react-native';
 
+import { playSfx } from '@/audio/sounds';
 import { colors, radii } from '@/theme/tokens';
 import { T } from './T';
 
@@ -55,6 +56,7 @@ export function GlowButton({
 }: Props) {
   const handle = () => {
     if (disabled) return;
+    playSfx('click');
     if (Platform.OS !== 'web') Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
     onPress();
   };

@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, Image, Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import { buffIcon, itemArt, type BuffIconName } from '@/art';
+import { playSfx, playSfxThrottled, playVoice } from '@/audio/sounds';
 import { CharacterAvatar } from '@/components/CharacterAvatar';
 import { FeatherPill } from '@/components/CurrencyPill';
 import { ResonanceIcon } from '@/components/icons';
@@ -86,6 +87,7 @@ export function CampaignScreen({ navigation, route }: Props) {
   const speedRef = useRef(1);
   const pausedRef = useRef(false);
   const endedRef = useRef(false);
+  const bossAnnounced = useRef(false);
 
   // init campaign once
   if (campRef.current === null) {
@@ -149,6 +151,9 @@ export function CampaignScreen({ navigation, route }: Props) {
       const progress =
         `\nXP earned: ${Math.round(totalXp)}` + (levelUps.length ? `\nLevel-ups: ${levelUps.join(', ')}` : '');
 
+      playSfx(won ? 'win' : 'lose');
+      if (won) playVoice('sage', 'campaign_won');
+
       if (won) {
         Alert.alert(
           'Campaign Cleared',
@@ -193,11 +198,23 @@ export function CampaignScreen({ navigation, route }: Props) {
         if (ev.kills) {
           mergeXp(xpBuffer.current, ev.xp);
           mergeXp(runXp.current, ev.xp);
+          playSfxThrottled('death', 90);
         }
-        if (ev.crit && Platform.OS !== 'web') Haptics.selectionAsync().catch(() => {});
+        if (ev.crit) {
+          playSfxThrottled('crit', 140);
+          if (Platform.OS !== 'web') Haptics.selectionAsync().catch(() => {});
+        }
+        // boss arrival sting (once)
+        if (!bossAnnounced.current && st.enemies.some((e) => e.type === 'whisper')) {
+          bossAnnounced.current = true;
+          playSfx('boss');
+          playVoice('corvus', 'boss_spawn');
+        }
         if (ev.waveCleared != null) {
           store.getState().recordWaveCleared(1);
           flushXp();
+          playSfx('waveclear');
+          playVoice('corvus', 'wave_clear');
           if (ev.bossDefeated) store.getState().recordBossDefeated();
         }
         if (ev.won) {
@@ -255,6 +272,8 @@ export function CampaignScreen({ navigation, route }: Props) {
     const ok = placeTower(st, armed, nx, ny);
     if (ok) {
       store.getState().recordTowerPlaced();
+      playSfx('place');
+      playVoice(armed, 'tower_placed');
       if (Platform.OS !== 'web') Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
       if (tutStep === 1) setTutStep(2); // step 1 (place) advances on a successful placement
       forceRender((n) => n + 1);
