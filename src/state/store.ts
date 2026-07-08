@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-import { rollBoneCast, isRunePlus } from '@/game/boneCast';
+import { rollBoneCast, isRunePlus, CAST_X10_COST } from '@/game/boneCast';
 import { prestigeMultiplier } from '@/game/formulas';
 import { offlineResonance } from '@/game/formulas';
 import type {
@@ -15,6 +15,33 @@ import type {
 } from '@/game/types';
 
 const RITUAL_COST = 500;
+
+interface CastState {
+  boneCast: { freeCastsRemaining: number; castsSincePity: number; lastResult: BoneCastResult | null };
+  account: Account;
+}
+
+/** Roll one Bone-Cast against the given state and apply its reward. Pure — returns the next state. */
+function rollAndApply(state: CastState): CastState & { result: BoneCastResult } {
+  const { result } = rollBoneCast(state.boneCast.castsSincePity);
+  const nextSincePity = isRunePlus(result.rarity) ? 0 : state.boneCast.castsSincePity + 1;
+  const runes = [...state.account.runes];
+  const skins = [...state.account.cosmetics.skins];
+  let feathersDelta = 0;
+  if (result.rarity === 'feathers') feathersDelta = 25;
+  if (result.rarity === 'rune') runes.push(result.label);
+  if (result.rarity === 'cosmetic') skins.push(result.label);
+  return {
+    boneCast: { ...state.boneCast, castsSincePity: nextSincePity, lastResult: result },
+    account: {
+      ...state.account,
+      feathers: state.account.feathers + feathersDelta,
+      runes,
+      cosmetics: { ...state.account.cosmetics, skins: Array.from(new Set(skins)) },
+    },
+    result,
+  };
+}
 
 function dayNumber(now = Date.now()): number {
   return Math.floor(now / 86_400_000);
@@ -132,18 +159,48 @@ interface GameStore {
   purchasePass: () => void;
   cancelPass: () => void;
 
-  // bone-cast
-  doBoneCast: (useFeathers: boolean) => BoneCastResult | null;
+  // bone-cast (atomic — no trust-the-caller free rolls)
+  castFree: () => BoneCastResult | null;
+  castTen: () => BoneCastResult | null;
 
   // daily
   claimQuest: (id: string) => void;
   claimWeekly: () => void;
-  watchAdQuest: () => void;
+  claimAdReward: (resonance: number) => boolean;
 
   // settings
   setSetting: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
   resetAccount: () => void;
   claimOffline: () => number;
+  sanitize: () => void;
+}
+
+/** Ceiling on rewarded ads per day (spec: 3 per session). Kills infinite-reward taps. */
+const AD_DAILY_CAP = 3;
+
+const posInt = (n: number, fallback = 0) => (Number.isFinite(n) && n >= 0 ? n : fallback);
+
+/** Clamp a persisted account back into a sane, finite, non-negative shape. */
+function sanitizeAccount(a: Account): Account {
+  const chars = { ...a.characters };
+  (Object.keys(chars) as TowerType[]).forEach((k) => {
+    const c = chars[k] ?? { level: 1, xp: 0, xpMax: 500 };
+    chars[k] = {
+      level: Math.min(10, Math.max(1, Math.floor(posInt(c.level, 1)) || 1)),
+      xp: posInt(c.xp, 0),
+      xpMax: posInt(c.xpMax, 500) || 500,
+    };
+  });
+  return {
+    ...a,
+    epoch: Math.max(0, Math.floor(posInt(a.epoch, 0))),
+    prestigeMultiplier: Number.isFinite(a.prestigeMultiplier) ? a.prestigeMultiplier : prestigeMultiplier(0),
+    resonance: posInt(a.resonance, 0),
+    feathers: posInt(a.feathers, 0),
+    characters: chars,
+    consumables: { ritual: Math.min(10, Math.max(0, Math.floor(posInt(a.consumables?.ritual, 0)))) },
+    adMetrics: { todayWatched: Math.max(0, Math.floor(posInt(a.adMetrics?.todayWatched, 0))) },
+  };
 }
 
 function levelUp(char: { level: number; xp: number; xpMax: number }, gained: number) {
@@ -202,21 +259,29 @@ export const useStore = create<GameStore>()(
         set((s) => ({ account: { ...s.account, offline: { lastSeenAt: Date.now() } } })),
 
       setResonance: (n) =>
-        set((s) => ({ account: { ...s.account, resonance: Math.max(0, Math.round(n)) } })),
+        set((s) => ({ account: { ...s.account, resonance: Number.isFinite(n) ? Math.max(0, Math.round(n)) : s.account.resonance } })),
 
-      addResonance: (n) =>
-        set((s) => ({ account: { ...s.account, resonance: Math.max(0, s.account.resonance + n) } })),
+      addResonance: (n) => {
+        if (!Number.isFinite(n) || n <= 0) return; // grants are positive only
+        set((s) => ({ account: { ...s.account, resonance: Math.max(0, s.account.resonance + n) } }));
+      },
 
       spendResonance: (n) => {
+        // Reject non-positive spends — a negative "spend" would mint currency.
+        if (!Number.isFinite(n) || n <= 0) return false;
         if (get().account.resonance < n) return false;
         set((s) => ({ account: { ...s.account, resonance: s.account.resonance - n } }));
         return true;
       },
 
-      addFeathers: (n) =>
-        set((s) => ({ account: { ...s.account, feathers: s.account.feathers + n } })),
+      addFeathers: (n) => {
+        if (!Number.isFinite(n) || n <= 0) return; // grants are positive only
+        set((s) => ({ account: { ...s.account, feathers: s.account.feathers + n } }));
+      },
 
       spendFeathers: (n) => {
+        // Reject non-positive spends — a negative "spend" would mint feathers.
+        if (!Number.isFinite(n) || n <= 0) return false;
         if (get().account.feathers < n) return false;
         set((s) => ({ account: { ...s.account, feathers: s.account.feathers - n } }));
         return true;
@@ -296,38 +361,34 @@ export const useStore = create<GameStore>()(
           account: { ...s.account, subscription: { conveniencePassActive: false } },
         })),
 
-      doBoneCast: (useFeathers) => {
+      castFree: () => {
         const s = get();
-        if (useFeathers) {
-          // handled by caller spending feathers for ×10; here single paid cast is free-first
-        } else if (s.boneCast.freeCastsRemaining <= 0) {
-          return null;
-        }
-        const { result } = rollBoneCast(s.boneCast.castsSincePity);
-        const nextSincePity = isRunePlus(result.rarity) ? 0 : s.boneCast.castsSincePity + 1;
-
-        // apply reward
-        let feathersDelta = 0;
-        const runes = [...s.account.runes];
-        const skins = [...s.account.cosmetics.skins];
-        if (result.rarity === 'feathers') feathersDelta += 25;
-        if (result.rarity === 'rune') runes.push(result.label);
-        if (result.rarity === 'cosmetic') skins.push(result.label);
-
+        if (s.boneCast.freeCastsRemaining <= 0) return null; // one free cast per day
+        const next = rollAndApply({ boneCast: s.boneCast, account: s.account });
         set({
-          boneCast: {
-            freeCastsRemaining: useFeathers ? s.boneCast.freeCastsRemaining : s.boneCast.freeCastsRemaining - 1,
-            castsSincePity: nextSincePity,
-            lastResult: result,
-          },
-          account: {
-            ...s.account,
-            feathers: s.account.feathers + feathersDelta,
-            runes,
-            cosmetics: { ...s.account.cosmetics, skins: Array.from(new Set(skins)) },
-          },
+          boneCast: { ...next.boneCast, freeCastsRemaining: s.boneCast.freeCastsRemaining - 1 },
+          account: next.account,
         });
-        return result;
+        return next.result;
+      },
+
+      castTen: () => {
+        const s = get();
+        // Spend is atomic and internal — there is no free ×10 path for a tampered client to call.
+        if (s.account.feathers < CAST_X10_COST) return null;
+        let cur: CastState = {
+          boneCast: s.boneCast,
+          account: { ...s.account, feathers: s.account.feathers - CAST_X10_COST },
+        };
+        let last: BoneCastResult | null = null;
+        const rank = { common: 0, uncommon: 1, rare: 2, legendary: 3 } as const;
+        for (let i = 0; i < 10; i++) {
+          const next = rollAndApply(cur);
+          cur = { boneCast: next.boneCast, account: next.account };
+          if (!last || rank[next.result.tier] >= rank[last.tier]) last = next.result;
+        }
+        set({ boneCast: cur.boneCast, account: cur.account });
+        return last;
       },
 
       claimQuest: (id) =>
@@ -353,20 +414,25 @@ export const useStore = create<GameStore>()(
           };
         }),
 
-      watchAdQuest: () =>
-        set((s) => {
-          const quests = s.rituals.quests.map((q) => ({ ...q }));
-          const q = quests.find((x) => x.id === 'watch_ad');
-          if (!q) return {};
-          q.progress = Math.min(q.target, q.progress + 1);
-          return {
-            rituals: { ...s.rituals, quests },
-            account: {
-              ...s.account,
-              adMetrics: { todayWatched: s.account.adMetrics.todayWatched + 1 },
-            },
-          };
-        }),
+      // Single choke-point for rewarded ads: enforces the daily cap so the reward
+      // can't be farmed by tapping "watch" repeatedly. Returns whether a reward was granted.
+      claimAdReward: (resonance) => {
+        const s = get();
+        if (s.account.adMetrics.todayWatched >= AD_DAILY_CAP) return false;
+        const grant = Number.isFinite(resonance) && resonance > 0 ? resonance : 0;
+        const quests = s.rituals.quests.map((q) => ({ ...q }));
+        const q = quests.find((x) => x.id === 'watch_ad');
+        if (q) q.progress = Math.min(q.target, q.progress + 1);
+        set({
+          rituals: { ...s.rituals, quests },
+          account: {
+            ...s.account,
+            resonance: s.account.resonance + grant,
+            adMetrics: { todayWatched: s.account.adMetrics.todayWatched + 1 },
+          },
+        });
+        return true;
+      },
 
       setSetting: (key, value) =>
         set((s) => ({ settings: { ...s.settings, [key]: value } })),
@@ -393,6 +459,9 @@ export const useStore = create<GameStore>()(
         }));
         return earned;
       },
+
+      // Re-clamp the account to a sane, finite shape (defends against hand-edited storage).
+      sanitize: () => set((s) => ({ account: sanitizeAccount(s.account) })),
     }),
     {
       name: 'corvus-protocol-v1',
@@ -404,6 +473,10 @@ export const useStore = create<GameStore>()(
         boneCast: s.boneCast,
         lastCampaign: s.lastCampaign,
       }),
+      // Any persisted blob (incl. tampered ones) is clamped back to sanity on load.
+      onRehydrateStorage: () => (state) => {
+        if (state?.account) state.account = sanitizeAccount(state.account);
+      },
     },
   ),
 );

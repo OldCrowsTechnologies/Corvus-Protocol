@@ -19,8 +19,7 @@ export function DailyRitualsScreen({ navigation }: Props) {
   const feathers = useStore((s) => s.account.feathers);
   const claimQuest = useStore((s) => s.claimQuest);
   const claimWeekly = useStore((s) => s.claimWeekly);
-  const watchAdQuest = useStore((s) => s.watchAdQuest);
-  const addResonance = useStore((s) => s.addResonance);
+  const claimAdReward = useStore((s) => s.claimAdReward);
 
   return (
     <Screen bg="top">
@@ -74,7 +73,9 @@ export function DailyRitualsScreen({ navigation }: Props) {
               key={q.id}
               quest={q}
               onClaim={() => claimQuest(q.id)}
-              onWatch={() => { watchAdQuest(); addResonance(500); }}
+              onWatch={() => {
+                if (!claimAdReward(500)) Alert.alert('Ad limit reached', 'You have claimed all 3 rewarded ads for today.');
+              }}
             />
           ))}
         </View>

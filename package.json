@@ -10,7 +10,10 @@
     "web": "expo start --web",
     "build:android": "eas build --platform android --profile preview",
     "build:android:prod": "eas build --platform android --profile production",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "stress": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types --import ./stress/register.mjs stress/index.mjs",
+    "security": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types --import ./stress/register.mjs stress/security.mjs",
+    "harden": "npm run typecheck && npm run stress && npm run security"
   },
   "dependencies": {
     "@expo-google-fonts/cinzel": "^0.4.1",

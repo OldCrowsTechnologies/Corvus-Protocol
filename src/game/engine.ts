@@ -37,10 +37,18 @@ function uid(prefix: string): string {
   return `${prefix}_${idCounter}`;
 }
 
-/** Convert spec pixel range (based on a 1080-wide board) into normalized 0..1 board units. */
+/**
+ * Convert spec pixel range into normalized 0..1 board units.
+ * Divisor tuned (not the literal 1080 board width) so towers cover 2-3 path tiles —
+ * at 1080 they barely reached one tile and enemies slipped through. See stress/diag.
+ */
 function normRange(specPx: number): number {
-  return specPx / 1080;
+  return specPx / 640;
 }
+
+/** Seconds between tower shots. Lower = higher effective DPS. Tuned for a winnable Normal. */
+const FIRE_COOLDOWN = 0.55;
+const MIRA_COOLDOWN = 0.8;
 
 /** Damage-number label — "450", "1.2K" — matching the bible's punchy readout. */
 function dmgLabel(n: number): string {
@@ -92,8 +100,8 @@ export function createCampaign(params: {
     resonance: params.startResonance,
     resonancePerSecond: idleResonancePerSecond(params.epoch, 0),
     elapsed: 0,
-    integrity: 10,
-    maxIntegrity: 10,
+    integrity: 20,
+    maxIntegrity: 20,
     leaked: 0,
     ritualActive: params.ritualActive,
     spawnQueue: [],
@@ -256,7 +264,7 @@ function fireTower(state: CampaignState, t: Tower, ev: TickEvents, rng: () => nu
       addFloaty(state, exec.pos, 'EXECUTE', true, '#E4C15A');
       killEnemy(state, exec, ev, 'mira');
       t.kills += 1;
-      t.cooldown = 1.2;
+      t.cooldown = MIRA_COOLDOWN;
       ev.towerFired = true;
     }
     return;
@@ -283,7 +291,7 @@ function fireTower(state: CampaignState, t: Tower, ev: TickEvents, rng: () => nu
   const shot = damage;
   damageEnemy(state, target, shot, ev, t.type);
   t.hitCount += 1;
-  t.cooldown = 0.9;
+  t.cooldown = FIRE_COOLDOWN;
   ev.towerFired = true;
   if (crit) ev.crit = true;
 

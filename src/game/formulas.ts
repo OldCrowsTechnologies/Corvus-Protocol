@@ -5,9 +5,14 @@
 import { DIFFICULTIES, OFFLINE_CAP_HOURS } from './constants';
 import type { Difficulty, EnemyType } from './types';
 
-/** Prestige multiplier: (epoch+1) × 1.5^epoch. Matches spec + design mockup (epoch 3 → 3.375×). */
+/**
+ * Prestige multiplier = 1.5^epoch.
+ * The handoff prose says "(epoch+1) × 1.5^epoch", but every concrete number it and the
+ * design mockup show (epoch 2 → 2.25×, epoch 3 → 3.375×, "reset with 1.5x") is 1.5^epoch.
+ * The canonical numbers win. epoch 0 → 1.0×, epoch 1 → 1.5×.
+ */
 export function prestigeMultiplier(epoch: number): number {
-  return (epoch + 1) * Math.pow(1.5, epoch);
+  return Math.pow(1.5, Math.max(0, epoch));
 }
 
 export function nextPrestigeMultiplier(epoch: number): number {
@@ -69,7 +74,9 @@ export function offlineResonance(params: {
   secondsElapsed: number;
   conveniencePass: boolean;
 }): { earned: number; hours: number; capped: boolean } {
-  const cappedSeconds = Math.min(params.secondsElapsed, OFFLINE_CAP_HOURS * 3600);
+  // Defend against clock skew / tampered timestamps: never negative, never NaN.
+  const safeSeconds = Number.isFinite(params.secondsElapsed) ? Math.max(0, params.secondsElapsed) : 0;
+  const cappedSeconds = Math.min(safeSeconds, OFFLINE_CAP_HOURS * 3600);
   const hours = cappedSeconds / 3600;
   const mult = prestigeMultiplier(params.epoch);
   const pass = params.conveniencePass ? 1.5 : 1.0;
@@ -77,7 +84,7 @@ export function offlineResonance(params: {
   return {
     earned,
     hours,
-    capped: params.secondsElapsed >= OFFLINE_CAP_HOURS * 3600,
+    capped: safeSeconds >= OFFLINE_CAP_HOURS * 3600,
   };
 }
 
@@ -135,6 +142,7 @@ export function spawnInterval(affixSwarm: boolean, aliveCount: number): number {
 }
 
 export function formatNumber(n: number): string {
+  if (!Number.isFinite(n)) return '0'; // never surface NaN/Infinity to the player
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(2).replace(/\.00$/, '') + 'M';
   if (n >= 10_000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
   return Math.round(n).toLocaleString('en-US');

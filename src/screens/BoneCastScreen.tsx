@@ -26,8 +26,8 @@ const TIER_COLOR: Record<BoneCastResult['tier'], string> = {
 export function BoneCastScreen({ navigation }: Props) {
   const boneCast = useStore((s) => s.boneCast);
   const feathers = useStore((s) => s.account.feathers);
-  const doBoneCast = useStore((s) => s.doBoneCast);
-  const spendFeathers = useStore((s) => s.spendFeathers);
+  const storeCastFree = useStore((s) => s.castFree);
+  const storeCastTen = useStore((s) => s.castTen);
 
   const [phase, setPhase] = useState<Phase>('idle');
   const [result, setResult] = useState<BoneCastResult | null>(null);
@@ -50,21 +50,16 @@ export function BoneCastScreen({ navigation }: Props) {
       Alert.alert('No free casts', 'Your free cast returns tomorrow — or cast ×10 with Feathers.');
       return;
     }
-    revealResult(doBoneCast(false));
+    revealResult(storeCastFree());
   };
 
   const castTen = () => {
-    if (!spendFeathers(CAST_X10_COST)) {
+    if (feathers < CAST_X10_COST) {
       Alert.alert('Not enough Feathers', `Cast ×10 costs ${CAST_X10_COST} Feathers. Earn more in Daily Rituals.`);
       return;
     }
-    let best: BoneCastResult | null = null;
-    const rank = { common: 0, uncommon: 1, rare: 2, legendary: 3 };
-    for (let i = 0; i < 10; i++) {
-      const r = doBoneCast(true);
-      if (r && (!best || rank[r.tier] >= rank[best.tier])) best = r;
-    }
-    revealResult(best);
+    // Spend + 10 rolls happen atomically in the store; returns the best result to reveal.
+    revealResult(storeCastTen());
   };
 
   const scale = burst.interpolate({ inputRange: [0, 1], outputRange: [0.6, 1] });

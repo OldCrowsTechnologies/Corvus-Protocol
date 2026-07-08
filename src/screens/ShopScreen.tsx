@@ -30,8 +30,7 @@ export function ShopScreen({ navigation, route }: Props) {
   const purchasePass = useStore((s) => s.purchasePass);
   const cancelPass = useStore((s) => s.cancelPass);
   const addFeathers = useStore((s) => s.addFeathers);
-  const watchAdQuest = useStore((s) => s.watchAdQuest);
-  const addResonance = useStore((s) => s.addResonance);
+  const claimAdReward = useStore((s) => s.claimAdReward);
 
   return (
     <Screen bg="top">
@@ -97,7 +96,14 @@ export function ShopScreen({ navigation, route }: Props) {
               </View>
             </Panel>
 
-            <ScrollAdRow onWatch={() => { watchAdQuest(); addResonance(500); Alert.alert('Reward', '+500 Resonance · quest progress logged.'); }} today={account.adMetrics.todayWatched} />
+            <ScrollAdRow
+              onWatch={() =>
+                claimAdReward(500)
+                  ? Alert.alert('Reward', '+500 Resonance · quest progress logged.')
+                  : Alert.alert('Ad limit reached', 'You have claimed all 3 rewarded ads for today.')
+              }
+              today={account.adMetrics.todayWatched}
+            />
           </>
         )}
 

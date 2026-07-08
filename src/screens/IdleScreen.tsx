@@ -20,8 +20,7 @@ export function IdleScreen({ navigation }: Props) {
   const pending = useStore((s) => s.pendingOffline);
   const claimOffline = useStore((s) => s.claimOffline);
   const last = useStore((s) => s.lastCampaign);
-  const watchAdQuest = useStore((s) => s.watchAdQuest);
-  const addResonance = useStore((s) => s.addResonance);
+  const claimAdReward = useStore((s) => s.claimAdReward);
   const pass = useStore((s) => s.account.subscription.conveniencePassActive);
   const drift = useRef(new Animated.Value(0)).current;
 
@@ -92,7 +91,7 @@ export function IdleScreen({ navigation }: Props) {
 
       <View style={styles.upsell}>
         <Pressable
-          onPress={() => { watchAdQuest(); addResonance(earned); claimOffline(); navigation.replace('MainMenu'); }}
+          onPress={() => { claimAdReward(earned); claimOffline(); navigation.replace('MainMenu'); }}
           style={[styles.upsellBtn, { backgroundColor: 'rgba(0,194,199,.08)', borderColor: 'rgba(0,194,199,.3)' }]}
         >
           <T variant="mono" size={10} color={colors.tealSoft}>
