@@ -25,7 +25,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#05070a"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ]
     },
     "web": {
       "favicon": "./assets/icon.png"
@@ -34,6 +38,12 @@
       "expo-font",
       "expo-asset",
       "expo-audio"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "a5043aad-b206-4a8e-abde-9c9f68e717bd"
+      }
+    },
+    "owner": "oldcrowswireless"
   }
 }
