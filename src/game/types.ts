@@ -64,6 +64,8 @@ export interface CampaignState {
   wave: number; // 0 = pre-wave, 1..15
   waveInProgress: boolean;
   affix: AffixId;
+  /** Character levels at run start — scale each tower's per-level benefit. */
+  charLevels: Record<TowerType, number>;
   towers: Tower[];
   enemies: Enemy[];
   floaties: FloatingText[];

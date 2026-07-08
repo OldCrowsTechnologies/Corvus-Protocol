@@ -49,13 +49,13 @@ export function enemyHealthForWave(
 export function computeDamage(params: {
   dps: number;
   critChance: number;
-  proximityBuffTowers: number;
+  proximityBuff: number; // total Sage-aura fraction (e.g. 0.30 for two base auras)
   miraAmp: number; // 1.0 or 1.5+ if Mira in range
   rng: () => number;
 }): { damage: number; crit: boolean } {
   const crit = params.rng() < params.critChance;
   const critMult = crit ? 2.0 : 1.0;
-  const proximity = 1 + params.proximityBuffTowers * 0.15;
+  const proximity = 1 + params.proximityBuff;
   const damage = params.dps * critMult * proximity * params.miraAmp;
   return { damage, crit };
 }

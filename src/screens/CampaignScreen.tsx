@@ -46,6 +46,8 @@ export function CampaignScreen({ navigation, route }: Props) {
 
   const campRef = useRef<CampaignState | null>(null);
   const xpBuffer = useRef<Partial<Record<TowerType, number>>>({});
+  const runXp = useRef<Partial<Record<TowerType, number>>>({});
+  const startLevels = useRef<Record<TowerType, number> | null>(null);
   const [, forceRender] = useState(0);
   const [armed, setArmed] = useState<TowerType | null>(null);
   const [speed, setSpeed] = useState(1);
@@ -57,17 +59,25 @@ export function CampaignScreen({ navigation, route }: Props) {
   // init campaign once
   if (campRef.current === null) {
     const affix: AffixId = ROLLABLE_AFFIXES[Math.floor(Math.random() * ROLLABLE_AFFIXES.length)];
+    const chars = store.getState().account.characters;
     const st = createCampaign({
       difficulty,
       epoch: account.epoch,
       affix,
       ritualActive: ritualCount > 0,
       startResonance: account.resonance,
+      charLevels: {
+        corvus: chars.corvus.level,
+        sage: chars.sage.level,
+        pip: chars.pip.level,
+        mira: chars.mira.level,
+      },
     });
     if (resume && route.params && 'difficulty' in route.params) {
       const last = store.getState().lastCampaign;
       if (last) st.wave = Math.max(0, last.wave - 1);
     }
+    startLevels.current = { ...st.charLevels };
     beginNextWave(st);
     campRef.current = st;
   }
@@ -96,10 +106,22 @@ export function CampaignScreen({ navigation, route }: Props) {
       store.getState().setLastCampaign({ difficulty, wave: st.wave, active: !won });
       store.getState().markSeen();
 
+      // results detail: total XP earned + any level-ups this run
+      const totalXp = (Object.values(runXp.current) as number[]).reduce((a, b) => a + b, 0);
+      const newChars = store.getState().account.characters;
+      const start = startLevels.current;
+      const levelUps = start
+        ? (Object.keys(newChars) as TowerType[])
+            .filter((k) => newChars[k].level > (start[k] ?? 1))
+            .map((k) => `${k[0].toUpperCase()}${k.slice(1)} → L${newChars[k].level}`)
+        : [];
+      const progress =
+        `\nXP earned: ${Math.round(totalXp)}` + (levelUps.length ? `\nLevel-ups: ${levelUps.join(', ')}` : '');
+
       if (won) {
         Alert.alert(
           'Campaign Cleared',
-          `Whisper is silenced.\n\nResonance banked: ${formatNumber(st.resonance)}\nWave reached: ${st.wave}/${MAX_WAVES}`,
+          `Whisper is silenced.\n\nResonance banked: ${formatNumber(st.resonance)}\nWave reached: ${st.wave}/${MAX_WAVES}${progress}`,
           [
             { text: 'Prestige', onPress: () => navigation.replace('Prestige') },
             { text: 'Main Menu', onPress: () => navigation.replace('MainMenu') },
@@ -108,7 +130,7 @@ export function CampaignScreen({ navigation, route }: Props) {
       } else {
         Alert.alert(
           'The Circle Breaks',
-          `The Pale Chorus overwhelms the altar at wave ${st.wave}.\n\nResonance banked: ${formatNumber(st.resonance)}`,
+          `The Pale Chorus overwhelms the altar at wave ${st.wave}.\n\nResonance banked: ${formatNumber(st.resonance)}${progress}`,
           [
             { text: 'Retry Run', onPress: () => navigation.replace('Campaign', { difficulty }) },
             { text: 'Main Menu', onPress: () => navigation.replace('MainMenu') },
@@ -137,7 +159,10 @@ export function CampaignScreen({ navigation, route }: Props) {
 
       if (!pausedRef.current && st.status === 'running') {
         const ev = tickCampaign(st, dt * speedRef.current);
-        if (ev.kills) mergeXp(xpBuffer.current, ev.xp);
+        if (ev.kills) {
+          mergeXp(xpBuffer.current, ev.xp);
+          mergeXp(runXp.current, ev.xp);
+        }
         if (ev.crit && Platform.OS !== 'web') Haptics.selectionAsync().catch(() => {});
         if (ev.waveCleared != null) {
           store.getState().recordWaveCleared(1);

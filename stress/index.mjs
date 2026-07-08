@@ -37,6 +37,18 @@ function ok(cond, msg) {
 }
 const finite = (n) => typeof n === 'number' && Number.isFinite(n);
 
+/** Deterministic seeded RNG for reproducible comparisons. */
+function mulberry32(seed) {
+  let a = seed >>> 0;
+  return function () {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
 // ---------------------------------------------------------------------------
 console.log('\n== formulas ==');
 ok(Math.abs(prestigeMultiplier(0) - 1) < 1e-9, 'prestige(0)=1');
@@ -78,11 +90,11 @@ ok(spawnInterval(true, 10) > 0 && spawnInterval(false, 0) > 0, 'spawnInterval po
 
 // computeDamage: never NaN, crit doubles, proximity/amp scale
 {
-  const base = computeDamage({ dps: 15, critChance: 0, proximityBuffTowers: 0, miraAmp: 1, rng: () => 0.99 });
+  const base = computeDamage({ dps: 15, critChance: 0, proximityBuff: 0, miraAmp: 1, rng: () => 0.99 });
   ok(base.damage === 15 && !base.crit, 'base damage 15 no crit');
-  const crit = computeDamage({ dps: 15, critChance: 1, proximityBuffTowers: 0, miraAmp: 1, rng: () => 0 });
+  const crit = computeDamage({ dps: 15, critChance: 1, proximityBuff: 0, miraAmp: 1, rng: () => 0 });
   ok(crit.damage === 30 && crit.crit, 'crit doubles');
-  const buffed = computeDamage({ dps: 10, critChance: 0, proximityBuffTowers: 2, miraAmp: 1.5, rng: () => 0.99 });
+  const buffed = computeDamage({ dps: 10, critChance: 0, proximityBuff: 0.3, miraAmp: 1.5, rng: () => 0.99 });
   ok(Math.abs(buffed.damage - 10 * 1.3 * 1.5) < 1e-9, 'proximity+mira stack');
 }
 ok(killReward(100) === 50, 'killReward = maxHealth*0.5');
@@ -190,6 +202,34 @@ for (let i = 0; i < RUNS; i++) {
   else losses++;
 }
 console.log(`  ${RUNS} runs: ${wins} won, ${losses} lost, all terminated & invariant-clean`);
+
+// character levels must measurably strengthen towers
+console.log('\n== level scaling ==');
+{
+  // identical fixed scenario, L1 vs L10 — L10 should deal more total damage to the wave.
+  function damageDealtOverWave(levels) {
+    const st = createCampaign({ difficulty: 'hard', epoch: 0, affix: 'none', ritualActive: false, startResonance: 100000, charLevels: levels });
+    beginNextWave(st);
+    // place one of each tower clustered near the path so auras/chains all apply
+    const near = [...BUILDABLE].sort((a, b) => Math.min(...PATH.map((p) => Math.hypot(p.x - a.x, p.y - a.y))) - Math.min(...PATH.map((p) => Math.hypot(p.x - b.x, p.y - b.y))));
+    placeTower(st, 'corvus', near[0].x, near[0].y);
+    placeTower(st, 'sage', near[1].x, near[1].y);
+    placeTower(st, 'pip', near[2].x, near[2].y);
+    placeTower(st, 'mira', near[3].x, near[3].y);
+    const rng = mulberry32(12345); // deterministic — same rolls for both level sets
+    let totalMax = st.enemies.reduce((a, e) => a + e.maxHealth, 0);
+    let ticks = 0;
+    while (st.spawnQueue.length || st.enemies.length) {
+      if (ticks++ > 4000) break;
+      tickCampaign(st, 0.1, rng);
+    }
+    return { leaked: st.leaked, integrity: st.integrity };
+  }
+  const l1 = damageDealtOverWave({ corvus: 1, sage: 1, pip: 1, mira: 1 });
+  const l10 = damageDealtOverWave({ corvus: 10, sage: 10, pip: 10, mira: 10 });
+  ok(l10.leaked <= l1.leaked, `L10 leaks no more than L1 (L1=${l1.leaked}, L10=${l10.leaked})`);
+  ok(l10.integrity >= l1.integrity, `L10 preserves >= integrity (L1=${l1.integrity}, L10=${l10.integrity})`);
+}
 
 // placement edge cases
 console.log('\n== placement edges ==');

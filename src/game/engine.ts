@@ -80,12 +80,15 @@ function emptyEvents(): TickEvents {
   };
 }
 
+const DEFAULT_LEVELS: Record<TowerType, number> = { corvus: 1, sage: 1, pip: 1, mira: 1 };
+
 export function createCampaign(params: {
   difficulty: Difficulty;
   epoch: number;
   affix: CampaignState['affix'];
   ritualActive: boolean;
   startResonance: number;
+  charLevels?: Record<TowerType, number>;
 }): CampaignState {
   return {
     campaignId: uid('campaign'),
@@ -94,6 +97,7 @@ export function createCampaign(params: {
     wave: 0,
     waveInProgress: false,
     affix: params.affix,
+    charLevels: params.charLevels ?? { ...DEFAULT_LEVELS },
     towers: [],
     enemies: [],
     floaties: [],
@@ -187,20 +191,31 @@ function spawnEnemy(state: CampaignState, type: EnemyType): void {
   state.enemies.push(enemy);
 }
 
-/** Count nearby Sage towers that buff a given tower (proximity aura). */
-function sageProximity(state: CampaignState, t: Tower): number {
-  const auraRange = normRange(TOWERS.sage.range);
-  let n = 0;
-  for (const other of state.towers) {
-    if (other.id === t.id) continue;
-    if (other.type === 'sage' && dist(other.pos, t.pos) <= auraRange) n += 1;
-  }
-  return n;
+/** Character level for a tower type this run (1..10). */
+function lvl(state: CampaignState, type: TowerType): number {
+  return Math.max(1, Math.min(10, Math.floor(state.charLevels[type] ?? 1)));
 }
 
-/** Mira amplification if a Mira tower is in range of this tower. */
+/**
+ * Total Sage-aura buff fraction on a tower. Each nearby Sage contributes 0.15,
+ * strengthened by that Sage's level: +1.5% per level (spec: +2% durability/level, adapted).
+ */
+function sageBuff(state: CampaignState, t: Tower): number {
+  const sageLevel = lvl(state, 'sage');
+  const auraRange = normRange(TOWERS.sage.range);
+  let buff = 0;
+  for (const other of state.towers) {
+    if (other.id === t.id) continue;
+    if (other.type === 'sage' && dist(other.pos, t.pos) <= auraRange) {
+      buff += 0.15 + 0.015 * (sageLevel - 1);
+    }
+  }
+  return buff;
+}
+
+/** Mira amplification if a Mira tower is in range. Mira level extends the aura range (spec: +5px/level). */
 function miraAmp(state: CampaignState, t: Tower): number {
-  const auraRange = normRange(TOWERS.mira.range);
+  const auraRange = normRange(TOWERS.mira.range + 5 * (lvl(state, 'mira') - 1));
   for (const other of state.towers) {
     if (other.type === 'mira' && dist(other.pos, t.pos) <= auraRange) return 1.5;
   }
@@ -257,8 +272,10 @@ function fireTower(state: CampaignState, t: Tower, ev: TickEvents, rng: () => nu
 
   // Mira deals no direct damage but executes low-HP enemies in range.
   if (t.type === 'mira') {
+    const execRange = normRange(TOWERS.mira.range + 5 * (lvl(state, 'mira') - 1));
+    const execThreshold = 0.3 + 0.01 * (lvl(state, 'mira') - 1); // higher level executes sooner
     const exec = state.enemies.find(
-      (e) => e.type !== 'whisper' && e.health <= e.maxHealth * 0.3 && dist(e.pos, t.pos) <= range,
+      (e) => e.type !== 'whisper' && e.health <= e.maxHealth * execThreshold && dist(e.pos, t.pos) <= execRange,
     );
     if (exec) {
       addFloaty(state, exec.pos, 'EXECUTE', true, '#E4C15A');
@@ -277,12 +294,14 @@ function fireTower(state: CampaignState, t: Tower, ev: TickEvents, rng: () => nu
   }
   if (!target) return;
 
-  const proximity = sageProximity(state, t);
+  const proximity = sageBuff(state, t);
   const amp = miraAmp(state, t);
+  // Corvus: +1% crit chance per level (spec).
+  const critChance = def.critChance + (t.type === 'corvus' ? 0.01 * (lvl(state, 'corvus') - 1) : 0);
   const { damage, crit } = computeDamage({
     dps: def.dps,
-    critChance: def.critChance,
-    proximityBuffTowers: proximity,
+    critChance,
+    proximityBuff: proximity,
     miraAmp: amp,
     rng,
   });
@@ -304,16 +323,20 @@ function fireTower(state: CampaignState, t: Tower, ev: TickEvents, rng: () => nu
     crit ? '#f06fd0' : '#d9c2ec',
   );
 
-  // Pip: every 3rd hit chains to up to 2 nearby enemies.
+  // Pip: every 3rd hit chains to nearby enemies. Level boosts chain damage (+3%/lvl) and,
+  // from L8, adds a 3rd chain target (spec: theft rate +3%/level).
   if (t.type === 'pip' && t.hitCount % 3 === 0) {
+    const pipLevel = lvl(state, 'pip');
     const chainRange = normRange(120);
+    const chainFrac = 0.6 + 0.03 * (pipLevel - 1);
+    const maxTargets = pipLevel >= 8 ? 3 : 2;
     let chained = 0;
     for (const e of state.enemies) {
-      if (chained >= 2) break;
+      if (chained >= maxTargets) break;
       if (e.id === target.id) continue;
       if (dist(e.pos, target.pos) <= chainRange) {
-        damageEnemy(state, e, shot * 0.6, ev, 'pip');
-        addFloaty(state, e.pos, `${dmgLabel(shot * 0.6)}`, false, '#9be6b3');
+        damageEnemy(state, e, shot * chainFrac, ev, 'pip');
+        addFloaty(state, e.pos, `${dmgLabel(shot * chainFrac)}`, false, '#9be6b3');
         chained += 1;
       }
     }
