@@ -1,8 +1,9 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
+import { cosmeticArt, itemArt } from '@/art';
 import { FeatherPill, ResonancePill } from '@/components/CurrencyPill';
 import { FeatherIcon } from '@/components/icons';
 import { Screen } from '@/components/Screen';
@@ -22,6 +23,13 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'pass', label: 'PASS' },
   { id: 'feathers', label: 'FEATHERS' },
 ];
+
+const COSMETIC_GALLERY = [
+  { ownKey: 'krragh', name: 'Krragh', category: 'FAMILIAR', art: cosmeticArt.krragh, source: 'Murder L5 unlock' },
+  { ownKey: 'corvus_plague', name: 'Plague-Bearer', category: 'SKIN · CORVUS', art: cosmeticArt.corvus_plague, source: 'Epoch reward' },
+  { ownKey: 'threshold_realm', name: 'Threshold Realm', category: 'BOARD', art: cosmeticArt.threshold_realm, source: 'Bone-Cast' },
+  { ownKey: 'trickster_mantle', name: 'Trickster Mantle', category: 'RELIQUARY', art: cosmeticArt.trickster_mantle, source: 'Weekly Rite' },
+] as const;
 
 export function ShopScreen({ navigation, route }: Props) {
   const [tab, setTab] = useState<Tab>(route.params?.tab ?? 'consumables');
@@ -67,9 +75,7 @@ export function ShopScreen({ navigation, route }: Props) {
           <>
             <Panel border="rgba(0,194,199,.22)" style={styles.rowCard}>
               <View style={styles.ritualIcon}>
-                <T variant="mono" size={7} color={colors.textGhost} center>
-                  RITUAL{'\n'}ICON
-                </T>
+                <Image source={itemArt.ritual} style={styles.itemImg} />
               </View>
               <View style={{ flex: 1 }}>
                 <View style={styles.between}>
@@ -179,25 +185,30 @@ export function ShopScreen({ navigation, route }: Props) {
 
         {tab === 'cosmetics' && (
           <View style={{ gap: 10 }}>
-            {account.cosmetics.skins.map((skin) => (
-              <Panel key={skin} style={styles.rowCard}>
-                <View style={[styles.ritualIcon, { borderStyle: 'solid', borderColor: 'rgba(184,146,42,.4)' }]}>
-                  <T variant="mono" size={7} color="#8a7a3f" center>
-                    SKIN
-                  </T>
-                </View>
-                <View style={{ flex: 1 }}>
-                  <T variant="display" size={14}>
-                    {skin.replace(/_/g, ' ').toUpperCase()}
-                  </T>
-                  <T variant="mono" size={9} color={account.cosmetics.equippedSkin === skin ? colors.teal : colors.textFaint}>
-                    {account.cosmetics.equippedSkin === skin ? 'EQUIPPED' : 'OWNED'}
-                  </T>
-                </View>
-              </Panel>
-            ))}
+            {COSMETIC_GALLERY.map((c) => {
+              const owned =
+                account.cosmetics.skins.includes(c.ownKey) || account.cosmetics.familiars.includes(c.ownKey);
+              return (
+                <Panel key={c.ownKey} style={styles.rowCard} border={owned ? 'rgba(0,194,199,.3)' : 'rgba(184,146,42,.28)'}>
+                  <View style={styles.cosmeticFrame}>
+                    <Image source={c.art} style={styles.cosmeticImg} />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <T variant="mono" size={8} color="#8a7a3f" spacing={1.2}>
+                      {c.category}
+                    </T>
+                    <T variant="display" size={14}>
+                      {c.name}
+                    </T>
+                    <T variant="mono" size={9} color={owned ? colors.teal : colors.textFaint} style={{ marginTop: 2 }}>
+                      {owned ? '✓ OWNED' : c.source}
+                    </T>
+                  </View>
+                </Panel>
+              );
+            })}
             <T variant="body" italic size={11} color={colors.textMute} center style={{ marginTop: 8 }}>
-              More skins unlock through prestige epochs & Bone-Cast.
+              Cosmetics unlock through prestige epochs, the Pass & Bone-Cast.
             </T>
           </View>
         )}
@@ -294,6 +305,19 @@ const styles = StyleSheet.create({
   tabIdle: { backgroundColor: 'rgba(255,255,255,.03)', borderColor: 'rgba(255,255,255,.08)' },
   body: { padding: 22, gap: 16 },
   rowCard: { flexDirection: 'row', gap: 13, alignItems: 'center' },
+  itemImg: { width: 48, height: 48, resizeMode: 'contain' },
+  cosmeticFrame: {
+    width: 56,
+    height: 56,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: 'rgba(184,146,42,.35)',
+    backgroundColor: '#0c1420',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  cosmeticImg: { width: 56, height: 56, resizeMode: 'cover' },
   ritualIcon: {
     width: 54,
     height: 54,

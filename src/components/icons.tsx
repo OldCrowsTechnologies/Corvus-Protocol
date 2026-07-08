@@ -1,48 +1,14 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
-import { View } from 'react-native';
+import { Image } from 'react-native';
 
-import { colors } from '@/theme/tokens';
+import { currencyArt } from '@/art';
 
-/** Resonance — soft currency. Gold radial-ish dot. */
+/** Resonance — soft currency. Bible gold coin (matches the gold Resonance theme). */
 export function ResonanceIcon({ size = 14 }: { size?: number }) {
-  return (
-    <LinearGradient
-      colors={[colors.goldLight, colors.gold]}
-      start={{ x: 0.35, y: 0.3 }}
-      end={{ x: 1, y: 1 }}
-      style={{
-        width: size,
-        height: size,
-        borderRadius: size / 2,
-        shadowColor: colors.gold,
-        shadowOpacity: 0.7,
-        shadowRadius: size * 0.7,
-        shadowOffset: { width: 0, height: 0 },
-      }}
-    />
-  );
+  return <Image source={currencyArt.resonance} style={{ width: size * 1.35, height: size * 1.35, resizeMode: 'contain' }} />;
 }
 
-/** Feathers — premium currency. Teal→gold rotated diamond (distinct from both soft currencies). */
+/** Feathers — premium currency. Bible teal Echo-Shards crystal (distinct from the soft coin). */
 export function FeatherIcon({ size = 12 }: { size?: number }) {
-  return (
-    <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
-      <LinearGradient
-        colors={[colors.teal, colors.gold]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={{
-          width: size * 0.82,
-          height: size * 0.82,
-          borderRadius: 2,
-          transform: [{ rotate: '45deg' }],
-          shadowColor: colors.teal,
-          shadowOpacity: 0.6,
-          shadowRadius: size * 0.6,
-          shadowOffset: { width: 0, height: 0 },
-        }}
-      />
-    </View>
-  );
+  return <Image source={currencyArt.feathers} style={{ width: size * 1.5, height: size * 1.5, resizeMode: 'contain' }} />;
 }

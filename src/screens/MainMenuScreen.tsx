@@ -1,10 +1,10 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useRef } from 'react';
-import { Animated, Easing, Pressable, StyleSheet, View } from 'react-native';
+import { Animated, Easing, Image, Pressable, StyleSheet, View } from 'react-native';
 
+import { brandLogo, uiIcon, type UiIconName } from '@/art';
 import { GlowButton } from '@/components/GlowButton';
 import { Screen } from '@/components/Screen';
-import { Sigil } from '@/components/Sigil';
 import { T } from '@/components/T';
 import { FeatherPill, ResonancePill } from '@/components/CurrencyPill';
 import { nextPrestigeMultiplier } from '@/game/formulas';
@@ -61,13 +61,7 @@ export function MainMenuScreen({ navigation }: Props) {
       </View>
 
       <View style={styles.hero}>
-        <Sigil size={104} />
-        <T variant="displayHeavy" size={34} center spacing={1.6} glow="rgba(0,194,199,.35)" style={{ lineHeight: 38, marginTop: 8 }}>
-          CORVUS{'\n'}PROTOCOL
-        </T>
-        <T variant="displayMed" size={11} color={colors.gold} spacing={5.5} center style={{ marginTop: 6 }}>
-          THE OMEN WARS
-        </T>
+        <Image source={brandLogo} style={styles.logo} />
       </View>
 
       <View style={styles.menu}>
@@ -93,26 +87,37 @@ export function MainMenuScreen({ navigation }: Props) {
         </Pressable>
 
         <View style={styles.grid2}>
-          <MenuTile label="ROOKERY" color={colors.gold} onPress={() => navigation.navigate('Rookery')} />
-          <MenuTile label="RITUALS" color={colors.teal} onPress={() => navigation.navigate('DailyRituals')} />
+          <MenuTile label="ROOKERY" icon="crown" color={colors.gold} onPress={() => navigation.navigate('Rookery')} />
+          <MenuTile label="RITUALS" icon="home" color={colors.teal} onPress={() => navigation.navigate('DailyRituals')} />
         </View>
         <View style={styles.grid2}>
-          <MenuTile label="BONE-CAST" color={colors.purpleSoft} onPress={() => navigation.navigate('BoneCast')} />
-          <MenuTile label="CODEX" color={colors.textMute} onPress={() => navigation.navigate('PaleChorus')} />
+          <MenuTile label="BONE-CAST" icon="tower" color={colors.purpleSoft} onPress={() => navigation.navigate('BoneCast')} />
+          <MenuTile label="CODEX" icon="chart" color={colors.textMute} onPress={() => navigation.navigate('PaleChorus')} />
         </View>
         <View style={styles.grid2}>
-          <MenuTile label="SHOP" color={colors.tealSoft} onPress={() => navigation.navigate('Shop')} />
-          <MenuTile label="SETTINGS" color={colors.textMute} onPress={() => navigation.navigate('Settings')} />
+          <MenuTile label="SHOP" icon="cart" color={colors.tealSoft} onPress={() => navigation.navigate('Shop')} />
+          <MenuTile label="SETTINGS" icon="gear" color={colors.textMute} onPress={() => navigation.navigate('Settings')} />
         </View>
       </View>
     </Screen>
   );
 }
 
-function MenuTile({ label, color, onPress }: { label: string; color: string; onPress: () => void }) {
+function MenuTile({
+  label,
+  icon,
+  color,
+  onPress,
+}: {
+  label: string;
+  icon: UiIconName;
+  color: string;
+  onPress: () => void;
+}) {
   return (
     <Pressable onPress={onPress} style={({ pressed }) => [styles.tile, { opacity: pressed ? 0.7 : 1 }]}>
-      <T variant="displayMed" size={15} color={color} spacing={1.2}>
+      <Image source={uiIcon[icon]} style={styles.tileIcon} />
+      <T variant="displayMed" size={14} color={color} spacing={1.1}>
         {label}
       </T>
     </Pressable>
@@ -148,7 +153,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 12,
   },
-  hero: { marginTop: 22, alignItems: 'center' },
+  hero: { marginTop: 30, alignItems: 'center' },
+  logo: { width: 280, height: 158, resizeMode: 'contain' },
   menu: { marginTop: 'auto', paddingHorizontal: 20, paddingBottom: 28, gap: 12 },
   secondary: {
     paddingVertical: 15,
@@ -163,11 +169,15 @@ const styles = StyleSheet.create({
   grid2: { flexDirection: 'row', gap: 12 },
   tile: {
     flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 15,
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 13,
     borderRadius: radii.lg,
     backgroundColor: 'rgba(255,255,255,.03)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,.1)',
   },
+  tileIcon: { width: 18, height: 18, resizeMode: 'contain', opacity: 0.9 },
 });

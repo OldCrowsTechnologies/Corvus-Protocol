@@ -1,7 +1,8 @@
 import React from 'react';
-import { Pressable, StyleSheet, View, type GestureResponderEvent } from 'react-native';
-import Svg, { Circle, Defs, Ellipse, G, Line, Rect, RadialGradient, Stop } from 'react-native-svg';
+import { Image, Pressable, StyleSheet, View, type GestureResponderEvent } from 'react-native';
+import Svg, { Circle, Defs, Line, Rect, RadialGradient, Stop } from 'react-native-svg';
 
+import { enemyArt } from '@/art';
 import { CharacterAvatar } from '@/components/CharacterAvatar';
 import { T } from '@/components/T';
 import { BUILDABLE, GRID_COLS, GRID_ROWS, PATH } from '@/game/board';
@@ -16,12 +17,13 @@ interface Props {
   onTapBoard: (nx: number, ny: number) => void;
 }
 
-const ENEMY_FILL: Record<string, string> = {
-  wisp: 'rgba(190,205,225,0.7)',
-  wailer: 'rgba(175,195,120,0.7)',
-  shrieker: 'rgba(220,120,170,0.7)',
-  husk: 'rgba(150,120,180,0.7)',
-  whisper: '#0c0a12',
+/** On-board sprite pixel size per enemy type. */
+const ENEMY_SIZE: Record<string, number> = {
+  wisp: 24,
+  wailer: 26,
+  shrieker: 22,
+  husk: 32,
+  whisper: 48,
 };
 
 /** Top-down stylized board (flat-sprite fallback per handoff). Grid → path → altar → towers → enemies. */
@@ -109,22 +111,25 @@ export function CampaignBoard({ state, armed, onTapBoard }: Props) {
               />
             ))}
 
-            {/* enemies */}
-            {state.enemies.map((en) => {
-              const px = en.pos.x * w;
-              const py = en.pos.y * h;
-              const size = en.type === 'whisper' ? 15 : en.type === 'husk' ? 11 : 8;
-              const hpPct = Math.max(0, en.health / en.maxHealth);
-              return (
-                <G key={en.id}>
-                  <Ellipse cx={px} cy={py} rx={size} ry={size * 1.15} fill={ENEMY_FILL[en.type]} stroke="rgba(255,255,255,0.5)" strokeWidth={en.type === 'whisper' ? 1.4 : 0.8} />
-                  {/* hp bar */}
-                  <Rect x={px - size} y={py - size * 1.6} width={size * 2} height={2.5} rx={1} fill="rgba(0,0,0,0.5)" />
-                  <Rect x={px - size} y={py - size * 1.6} width={size * 2 * hpPct} height={2.5} rx={1} fill={en.type === 'whisper' ? '#b39be0' : '#e08a8a'} />
-                </G>
-              );
-            })}
           </Svg>
+
+          {/* enemy sprites (bible art) with HP bars — under towers */}
+          {state.enemies.map((en) => {
+            const size = ENEMY_SIZE[en.type] ?? 24;
+            const hpPct = Math.max(0, en.health / en.maxHealth);
+            return (
+              <View
+                key={en.id}
+                pointerEvents="none"
+                style={{ position: 'absolute', left: en.pos.x * w - size / 2, top: en.pos.y * h - size / 2, width: size, alignItems: 'center' }}
+              >
+                <View style={{ width: size * 0.8, height: 2.5, borderRadius: 1, backgroundColor: 'rgba(0,0,0,0.55)' }}>
+                  <View style={{ width: `${hpPct * 100}%`, height: '100%', borderRadius: 1, backgroundColor: en.type === 'whisper' ? '#b39be0' : '#e08a8a' }} />
+                </View>
+                <Image source={enemyArt[en.type]} style={{ width: size, height: size, resizeMode: 'contain', marginTop: 1 }} />
+              </View>
+            );
+          })}
 
           {/* tower avatars overlaid */}
           {state.towers.map((tw) => (

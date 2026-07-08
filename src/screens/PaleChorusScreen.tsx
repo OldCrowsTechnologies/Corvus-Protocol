@@ -1,13 +1,14 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
 
+import { enemyArt } from '@/art';
 import { Screen } from '@/components/Screen';
 import { T } from '@/components/T';
 import { Header, Panel } from '@/components/ui';
 import { ENEMIES } from '@/game/constants';
 import type { EnemyType } from '@/game/types';
-import { colors, radii } from '@/theme/tokens';
+import { colors } from '@/theme/tokens';
 import type { RootStackParamList } from '@/navigation/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PaleChorus'>;
@@ -38,18 +39,12 @@ export function PaleChorusScreen({ navigation }: Props) {
               glowColor={boss ? 'rgba(200,180,230,.4)' : undefined}
               style={styles.card}
             >
-              <View
-                style={[
-                  styles.glyph,
-                  {
-                    width: e.size + 16,
-                    height: e.size + 22,
-                    backgroundColor: e.color,
-                    borderColor: e.border,
-                    shadowColor: boss ? '#c8b4e6' : e.border,
-                  },
-                ]}
-              />
+              <View style={[styles.glyph, { shadowColor: boss ? '#c8b4e6' : e.border }]}>
+                <Image
+                  source={enemyArt[type]}
+                  style={{ width: boss ? 62 : 50, height: boss ? 62 : 50, resizeMode: 'contain' }}
+                />
+              </View>
               <View style={{ flex: 1 }}>
                 <View style={styles.between}>
                   <T variant="display" size={boss ? 15 : 14}>
@@ -81,12 +76,12 @@ const styles = StyleSheet.create({
   body: { padding: 18, gap: 9 },
   card: { flexDirection: 'row', gap: 11, alignItems: 'center' },
   glyph: {
-    borderRadius: radii.lg,
-    borderWidth: 1,
-    borderBottomLeftRadius: 14,
-    borderBottomRightRadius: 14,
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
+    width: 64,
+    height: 64,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowOpacity: 0.6,
+    shadowRadius: 12,
     shadowOffset: { width: 0, height: 0 },
   },
   between: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },

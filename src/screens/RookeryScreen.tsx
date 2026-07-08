@@ -2,6 +2,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
+import { towerArt } from '@/art';
 import { castArt, type CharId } from '@/cast';
 import { CharacterAvatar } from '@/components/CharacterAvatar';
 import { GlowButton } from '@/components/GlowButton';
@@ -87,6 +88,7 @@ export function RookeryScreen({ navigation }: Props) {
                 </View>
               </View>
             </View>
+            {isTower(sel) ? <Image source={towerArt[sel]} style={styles.towerIcon} /> : null}
           </View>
 
           <T variant="body" size={12} color={colors.textDim} style={{ marginTop: 12 }}>
@@ -168,6 +170,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
   },
   detailImgInner: { width: '100%', height: '100%', resizeMode: 'cover' },
+  towerIcon: { width: 40, height: 58, resizeMode: 'contain' },
   levelRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 6 },
   statGrid: { flexDirection: 'row', gap: 8, marginTop: 12 },
   stat: { flex: 1, alignItems: 'center', paddingVertical: 8, borderRadius: radii.sm, backgroundColor: 'rgba(255,255,255,.03)' },

@@ -1,8 +1,9 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as Haptics from 'expo-haptics';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Alert, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Alert, Image, Platform, Pressable, StyleSheet, View } from 'react-native';
 
+import { buffIcon, itemArt, type BuffIconName } from '@/art';
 import { CharacterAvatar } from '@/components/CharacterAvatar';
 import { FeatherPill } from '@/components/CurrencyPill';
 import { ResonanceIcon } from '@/components/icons';
@@ -26,6 +27,14 @@ import type { RootStackParamList } from '@/navigation/types';
 import { CampaignBoard } from './CampaignBoard';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Campaign'>;
+
+const AFFIX_ICON: Record<string, BuffIconName> = {
+  none: 'clock',
+  swarm: 'skull',
+  fog: 'down',
+  frenzy: 'up',
+  veil: 'shield',
+};
 
 export function CampaignScreen({ navigation, route }: Props) {
   const difficulty = route.params?.difficulty ?? 'normal';
@@ -236,9 +245,12 @@ export function CampaignScreen({ navigation, route }: Props) {
             <ProgressBar pct={st.integrity / st.maxIntegrity} color="#e08a8a" track="#2a1414" height={7} />
           </View>
         )}
-        <T variant="mono" size={8} color={st.affix === 'none' ? colors.textFaint : '#c9a5e0'} spacing={0.6} style={{ marginTop: 6 }}>
-          {st.affix === 'none' ? `◆ CIRCLE INTEGRITY ${st.integrity}/${st.maxIntegrity}` : `⚠ AFFIX: ${affix.label} — ${affix.blurb}`}
-        </T>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 6 }}>
+          {st.affix !== 'none' ? <Image source={buffIcon[AFFIX_ICON[st.affix]]} style={{ width: 14, height: 14, resizeMode: 'contain' }} /> : null}
+          <T variant="mono" size={8} color={st.affix === 'none' ? colors.textFaint : '#c9a5e0'} spacing={0.6}>
+            {st.affix === 'none' ? `◆ CIRCLE INTEGRITY ${st.integrity}/${st.maxIntegrity}` : `AFFIX: ${affix.label} — ${affix.blurb}`}
+          </T>
+        </View>
       </View>
 
       {/* board */}
@@ -272,10 +284,8 @@ export function CampaignScreen({ navigation, route }: Props) {
           );
         })}
         <View style={[styles.card, styles.itemCard]}>
-          <T variant="mono" size={8} color={st.ritualActive ? colors.goldLight : colors.textMute}>
-            RITUAL
-          </T>
-          <T variant="mono" size={9} color={colors.goldLight} style={{ marginTop: 4 }}>
+          <Image source={itemArt.ritual} style={{ width: 24, height: 24, resizeMode: 'contain' }} />
+          <T variant="mono" size={9} color={st.ritualActive ? colors.goldLight : colors.textMute} style={{ marginTop: 2 }}>
             {st.ritualActive ? '+50%' : `×${ritualCount}`}
           </T>
         </View>

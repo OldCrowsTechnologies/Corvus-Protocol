@@ -1,8 +1,9 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { Alert, Image, StyleSheet, View } from 'react-native';
 
+import { cosmeticArt } from '@/art';
 import { GlowButton } from '@/components/GlowButton';
 import { Screen } from '@/components/Screen';
 import { T } from '@/components/T';
@@ -92,9 +93,7 @@ export function PrestigeScreen({ navigation }: Props) {
         style={styles.unlock}
       >
         <View style={styles.unlockIcon}>
-          <T variant="mono" size={7} color="#8a7a3f" center>
-            SKIN{'\n'}ART
-          </T>
+          <Image source={cosmeticArt.corvus_plague} style={styles.unlockImg} />
         </View>
         <View>
           <T variant="mono" size={9} color="#8a7a3f" spacing={1.4}>
@@ -170,12 +169,13 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: radii.sm,
     borderWidth: 1,
-    borderStyle: 'dashed',
     borderColor: 'rgba(184,146,42,.5)',
     backgroundColor: '#1c150c',
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
+  unlockImg: { width: 48, height: 48, resizeMode: 'cover' },
   quote: { marginTop: 'auto', paddingHorizontal: 24 },
   footer: { flexDirection: 'row', gap: 12, paddingHorizontal: 24, paddingTop: 16, paddingBottom: 28 },
 });
