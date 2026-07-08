@@ -48,6 +48,9 @@ export const itemArt = {
 
 export const brandLogo = require('../assets/brand/logo.png');
 
+/** Painterly isometric battlefield backdrop (summoning circle + gothic structures). */
+export const boardMap = require('../assets/board/map_scene.png');
+
 export type UiIconName =
   | 'home' | 'tower' | 'cart' | 'bag' | 'crown'
   | 'gear' | 'mail' | 'chart' | 'group' | 'help' | 'close';
